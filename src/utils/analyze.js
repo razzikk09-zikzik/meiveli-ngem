@@ -4,8 +4,19 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import linksRaw from '../assets/links.txt?raw';
 import termsRaw from '../assets/malicious-terms.txt?raw';
+import scamLinksYml from '../assets/scam-links.yml?raw';
+import trailingSlashes from '../assets/trailing-slashes.txt?raw';
 
-const KNOWN_BAD_LINKS = new Set(linksRaw.split('\n').map(l => l.trim().toLowerCase()).filter(Boolean));
+const allLinks = [
+  ...linksRaw.split('\n').map(l => l.trim()),
+  ...scamLinksYml.split('\n').map(l => {
+    if (l.trim().startsWith('- ')) return l.trim().substring(2).trim();
+    return '';
+  }),
+  ...trailingSlashes.split('\n').map(l => l.trim())
+].filter(Boolean).map(l => l.toLowerCase());
+
+const KNOWN_BAD_LINKS = new Set(allLinks);
 const KNOWN_BAD_TERMS = termsRaw.split('\n').map(t => t.trim().toLowerCase()).filter(Boolean);
 
 
@@ -268,7 +279,7 @@ export async function analyzeWithGemini(text, imageBase64 = null) {
   }
   
   const genAI = new GoogleGenerativeAI(apiKey);
-  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-3.8-flash' });
 
   const prompt = `
 You are an expert cybersecurity and anti-fraud system. 
