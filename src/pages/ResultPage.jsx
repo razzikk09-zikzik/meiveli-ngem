@@ -92,7 +92,23 @@ export default function ResultPage() {
     );
   }
 
-  const r = result || { score: 0, verdict: 'safe', signals: [], urls: [] };
+  // Loading state while Gemini analyzes
+  if (!result) {
+    return (
+      <div style={{ padding: '2rem 1rem', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '50vh', gap: '1rem' }}>
+        <div style={{
+          width: '2.5rem', height: '2.5rem', borderRadius: '50%',
+          border: '3px solid #E2E8F0', borderTopColor: '#2563EB',
+          animation: 'spin 1s linear infinite'
+        }} />
+        <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '1.125rem', color: '#0f172a' }}>Analyzing...</h2>
+        <p style={{ color: '#64748b', fontSize: '0.875rem' }}>Our AI is inspecting the message for threats.</p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
+  const r = result;
   const meta = VERDICT_META[r.verdict] || VERDICT_META.suspicious;
 
   const shareWarning = async () => {
