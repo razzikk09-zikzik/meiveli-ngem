@@ -13,10 +13,10 @@ const iconMap = {
 
 const routeToKey = {
   'home': 'home',
-  'report': 'reportScam',
-  'threats': 'activeThreats',
-  'guide': 'safetyGuide',
-  'help': 'helpResources'
+  'report': 'report',
+  'threats': 'threats',
+  'guide': 'guide',
+  'help': 'help'
 };
 
 export default function BottomTabBar() {

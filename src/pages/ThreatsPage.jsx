@@ -22,15 +22,15 @@ export default function ThreatsPage() {
   const { t } = useLanguage();
 
   // Merge hotspots with template so counts match everywhere
-  const dynamicThreats = THREATS_TEMPLATE.map(t => {
-    const hp = hotspots.find(h => h.name === t.area);
-    return { ...t, reports: hp ? hp.reports : 0 };
-  }).filter(t => t.reports > 0).sort((a,b) => b.reports - a.reports);
+  const dynamicThreats = THREATS_TEMPLATE.map(threat => {
+    const hp = hotspots.find(h => h.name === threat.area);
+    return { ...threat, reports: hp ? hp.reports : 0 };
+  }).filter(threat => threat.reports > 0).sort((a,b) => b.reports - a.reports);
 
   // Fallback to template if no real reports, for empty state UI purposes if desired
   // But the requirement says "Counts: markers, map labels and cards must all use the same data source"
   // So if there are no reports, it will be empty.
-  const sourceThreats = dynamicThreats.length > 0 ? dynamicThreats : THREATS_TEMPLATE.map(t => ({...t, reports: 0}));
+  const sourceThreats = dynamicThreats.length > 0 ? dynamicThreats : THREATS_TEMPLATE.map(threat => ({...threat, reports: 0}));
 
   // Filter map hotspots by category as well, and match counts exactly
   const filteredHotspots = hotspots.filter(h => {
@@ -41,7 +41,7 @@ export default function ThreatsPage() {
   });
 
   const filtered = sourceThreats.filter(
-    (t) => (category === 'All' || t.category === category)
+    (threat) => (category === 'All' || threat.category === category)
   );
 
   return (
@@ -88,22 +88,22 @@ export default function ThreatsPage() {
             {t('noThreats')}
           </div>
         )}
-        {filtered.map((t) => (
+        {filtered.map((threat) => (
           <button
-            key={t.id}
+            key={threat.id}
             style={{
               background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.875rem', padding: '0.875rem',
               display: 'flex', alignItems: 'center', gap: '0.75rem', textAlign: 'left', cursor: 'pointer',
               boxShadow: '0 1px 3px rgba(16,24,40,0.05)', width: '100%',
             }}
           >
-            <div style={{ width: '2.75rem', height: '2.75rem', borderRadius: '50%', background: t.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <img src={t.iconUrl} alt="" style={{ width: '1.5rem', height: '1.5rem', objectFit: 'contain' }} />
+            <div style={{ width: '2.75rem', height: '2.75rem', borderRadius: '50%', background: threat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <img src={threat.iconUrl} alt="" style={{ width: '1.5rem', height: '1.5rem', objectFit: 'contain' }} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a' }}>{t.title}</div>
+              <div style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a' }}>{threat.title}</div>
               <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.125rem' }}>
-                {t(t.area) || t.area} · <span style={{ color: '#DC2626', fontWeight: '700' }}>{t.reports} {t.reports === 1 ? t('reportSingular') : t('reportsPlural')}</span>
+                {threat.area} · <span style={{ color: '#DC2626', fontWeight: '700' }}>{threat.reports} {threat.reports === 1 ? t('reportSingular') : t('reportsPlural')}</span>
               </div>
             </div>
             <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="9 18 15 12 9 6" /></svg>
