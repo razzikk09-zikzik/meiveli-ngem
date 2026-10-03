@@ -1,6 +1,7 @@
 import { navItems } from '../data/mock';
 import { useLocation, Link } from 'react-router-dom';
 import { Home, ShieldAlert, TriangleAlert, BookOpen, FileText } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const iconMap = {
   Home,
@@ -10,8 +11,17 @@ const iconMap = {
   FileText
 };
 
+const routeToKey = {
+  'home': 'home',
+  'report': 'reportScam',
+  'threats': 'activeThreats',
+  'guide': 'safetyGuide',
+  'help': 'helpResources'
+};
+
 export default function BottomTabBar() {
   const location = useLocation();
+  const { t } = useLanguage();
 
   const getRoute = (id) => id === 'home' ? '/' : `/${id}`;
 
@@ -54,7 +64,7 @@ export default function BottomTabBar() {
           >
             {Icon && <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />}
             <span style={{ fontSize: '0.65rem', fontWeight: isActive ? '600' : '500' }}>
-              {item.label}
+              {t(routeToKey[item.id])}
             </span>
           </Link>
         );

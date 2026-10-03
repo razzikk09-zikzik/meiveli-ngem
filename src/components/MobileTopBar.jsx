@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useLanguage } from '../context/LanguageContext';
 
-export default function MobileTopBar({ language, onLanguageToggle, onOpenSettings }) {
+export default function MobileTopBar({ onOpenSettings }) {
+  const { language, setLanguage } = useLanguage();
   return (
     <header
       style={{
@@ -21,13 +23,13 @@ export default function MobileTopBar({ language, onLanguageToggle, onOpenSetting
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', background: '#F1F5F9', borderRadius: '1.25rem', padding: '0.125rem' }}>
           <button
-            onClick={() => onLanguageToggle('en')}
+            onClick={() => setLanguage('en')}
             style={{
               padding: '0.375rem 0.625rem', borderRadius: '1rem', border: 'none', background: language === 'en' ? '#2563EB' : 'transparent', color: language === 'en' ? '#fff' : '#64748b', fontFamily: "var(--font-head)", fontWeight: '700', fontSize: '0.75rem',
             }}
           >EN</button>
           <button
-            onClick={() => onLanguageToggle('ta')}
+            onClick={() => setLanguage('ta')}
             style={{
               padding: '0.375rem 0.625rem', borderRadius: '1rem', border: 'none', background: language === 'ta' ? '#2563EB' : 'transparent', color: language === 'ta' ? '#fff' : '#64748b', fontFamily: "var(--font-tamil)", fontWeight: '500', fontSize: '0.75rem',
             }}

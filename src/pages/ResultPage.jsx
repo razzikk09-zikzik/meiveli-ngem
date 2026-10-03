@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { analyzeWithGemini, VERDICT_META } from '../utils/analyze';
 import { supabase } from '../utils/supabase';
+import { useLanguage } from '../context/LanguageContext';
 
 const SIGNAL_ICONS = {
   link: 'M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71',
@@ -24,6 +25,7 @@ function SignalIcon({ type }) {
 export default function ResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const text = location.state?.text || '';
   const area = location.state?.area || 'Unknown';
   const [result, setResult] = useState(null);
@@ -103,13 +105,13 @@ export default function ResultPage() {
     return (
       <div style={{ padding: '1rem', maxWidth: '32rem', margin: '0 auto' }}>
         <div style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.875rem', padding: '2rem 1rem', textAlign: 'center' }}>
-          <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.25rem', fontWeight: '800' }}>Nothing to check yet</h1>
-          <p style={{ color: '#475569', fontSize: '0.875rem', margin: '0.5rem 0 1.25rem' }}>Paste a message on the home screen to analyse it.</p>
+          <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.25rem', fontWeight: '800' }}>{t('nothingToCheck')}</h1>
+          <p style={{ color: '#475569', fontSize: '0.875rem', margin: '0.5rem 0 1.25rem' }}>{t('pasteMessage')}</p>
           <button
             onClick={() => navigate('/')}
             style={{ padding: '0.75rem 1.5rem', borderRadius: '2rem', border: 'none', background: 'linear-gradient(90deg, #1D6FF2 0%, #7C5CF5 100%)', color: '#fff', fontFamily: 'var(--font-head)', fontWeight: '700', cursor: 'pointer' }}
           >
-            Go to Home
+            {t('goToHome')}
           </button>
         </div>
       </div>
@@ -125,8 +127,8 @@ export default function ResultPage() {
           border: '3px solid #E2E8F0', borderTopColor: '#2563EB',
           animation: 'spin 1s linear infinite'
         }} />
-        <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '1.125rem', color: '#0f172a' }}>Analyzing...</h2>
-        <p style={{ color: '#64748b', fontSize: '0.875rem' }}>Our AI is inspecting the message for threats.</p>
+        <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '1.125rem', color: '#0f172a' }}>{t('analyzing')}</h2>
+        <p style={{ color: '#64748b', fontSize: '0.875rem' }}>{t('aiInspecting')}</p>
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
       </div>
     );
@@ -148,7 +150,7 @@ export default function ResultPage() {
       {/* Back link */}
       <button onClick={() => navigate('/')} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', background: 'none', border: 'none', padding: '0', cursor: 'pointer', alignSelf: 'flex-start' }}>
         <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
-        <span style={{ fontFamily: 'var(--font-head)', fontWeight: '600', fontSize: '0.875rem', color: '#1e293b' }}>Check another message</span>
+        <span style={{ fontFamily: 'var(--font-head)', fontWeight: '600', fontSize: '0.875rem', color: '#1e293b' }}>{t('checkAnother')}</span>
       </button>
 
       {/* Verdict banner */}
@@ -157,7 +159,9 @@ export default function ResultPage() {
           <path d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 1 1 2 0 1 1 0 0 1-2 0zm1-8a1 1 0 0 0-1 1v3a1 1 0 0 0 2 0V6a1 1 0 0 0-1-1z" />
         </svg>
         <div>
-          <div style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1.25rem', color: meta.color }}>{meta.title}</div>
+          <div style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1.25rem', color: meta.color }}>
+            {meta.title === 'Safe' ? t('safe') : (meta.title === 'Suspicious' ? t('suspicious') : t('scamTitle'))}
+          </div>
           <div style={{ fontFamily: 'var(--font-head)', fontWeight: '600', fontSize: '0.875rem', color: meta.color }}>{meta.sub}</div>
         </div>
       </div>
@@ -172,25 +176,25 @@ export default function ResultPage() {
           }} />
         </div>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#16A34A' }}>Safe</span>
-          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#D97706' }}>Suspicious</span>
-          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#DC2626' }}>Scam</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#16A34A' }}>{t('safe')}</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#D97706' }}>{t('suspicious')}</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: '700', color: '#DC2626' }}>{t('scamTitle')}</span>
         </div>
       </div>
 
       {/* Analysed message */}
       <div style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.875rem', padding: '1rem' }}>
-        <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '0.9375rem', color: '#0f172a', marginBottom: '0.5rem' }}>Analysed message</h2>
+        <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '0.9375rem', color: '#0f172a', marginBottom: '0.5rem' }}>{t('analysedMsg')}</h2>
         {location.state?.imageBase64 && (
           <img src={location.state.imageBase64} alt="Uploaded screenshot" style={{ width: '100%', maxWidth: '16rem', borderRadius: '0.5rem', marginBottom: '0.75rem', border: '1px solid #E6EAF2' }} />
         )}
-        <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: 1.55, wordBreak: 'break-word' }}>{text || (location.state?.imageBase64 ? 'Image scan' : '')}</p>
+        <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: 1.55, wordBreak: 'break-word' }}>{text || (location.state?.imageBase64 ? t('imageScan') : '')}</p>
       </div>
 
       {/* What we found */}
       {r.signals.length > 0 && (
         <div style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.875rem', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-          <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '0.9375rem', color: '#0f172a' }}>What we found</h2>
+          <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '0.9375rem', color: '#0f172a' }}>{t('whatWeFound')}</h2>
           {r.signals.map((s) => (
             <div key={s.key} style={{ display: 'flex', gap: '0.625rem', alignItems: 'flex-start' }}>
               <SignalIcon type={s.key} />
@@ -218,27 +222,27 @@ export default function ResultPage() {
           style={{ width: '100%', padding: '0.875rem', borderRadius: '2rem', border: 'none', background: '#DC2626', color: '#fff', fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', cursor: 'pointer', boxShadow: '0 4px 12px rgba(220, 38, 38, 0.25)' }}
         >
           <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
-          Report this scam
+          {t('reportThisScam')}
         </button>
         <button
           onClick={shareWarning}
           style={{ width: '100%', padding: '0.875rem', borderRadius: '2rem', border: '1.5px solid #7C5CF5', background: '#fff', color: '#6D28D9', fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', cursor: 'pointer' }}
         >
           <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" /></svg>
-          {shared ? 'Copied to clipboard!' : 'Share warning'}
+          {shared ? t('copied') : t('shareWarning')}
         </button>
       </div>
 
       {/* What to do next */}
       <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '0.875rem', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
         <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '0.9375rem', color: '#1e40af' }}>
-          {r.verdict === 'safe' ? 'Stay alert' : 'What to do next'}
+          {r.verdict === 'safe' ? t('stayAlert') : t('whatToDoNext')}
         </h2>
         {(r.verdict === 'safe'
-          ? ['Never share OTP or PINs with anyone', 'Verify unexpected messages with the sender', 'Report anything suspicious to help others']
-          : ['Do not click the link', 'Do not share any OTP or details', 'Report it to help others']
+          ? [t('safeStep1'), t('safeStep2'), t('safeStep3')]
+          : [t('scamStep1'), t('scamStep2'), t('scamStep3')]
         ).map((step, i) => (
-          <div key={step} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+          <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
             <span style={{ width: '1.5rem', height: '1.5rem', borderRadius: '50%', background: '#2563EB', color: '#fff', fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>{i + 1}</span>
             <span style={{ fontSize: '0.875rem', fontWeight: '600', color: '#1e3A8A' }}>{step}</span>
           </div>

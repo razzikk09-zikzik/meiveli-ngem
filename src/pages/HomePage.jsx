@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import ThreatMap from '../components/ThreatMap';
 import { useHotspots } from '../hooks/useHotspots';
 import { reportTiles, scamCards } from '../data/mock';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function HomePage() {
   const [text, setText] = useState('');
@@ -10,7 +11,7 @@ export default function HomePage() {
   const [isRecording, setIsRecording] = useState(false);
   const [supportsSpeech] = useState('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [language, setLanguage] = useState('en');
+  const { t, language } = useLanguage();
   const [area, setArea] = useState('Velachery'); // default selected area
   const [alertIndex, setAlertIndex] = useState(0);
   const navigate = useNavigate();
@@ -85,8 +86,8 @@ export default function HomePage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* 1. Heading */}
       <div style={{ padding: '0.5rem 0' }}>
-        <h1 style={{ fontFamily: "var(--font-head)", fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.1 }}>Check. Stay Safe.</h1>
-        <p style={{ color: '#475569', fontSize: '0.9375rem', marginTop: '0.25rem' }}>Stop scams before you click.</p>
+        <h1 style={{ fontFamily: "var(--font-head)", fontSize: '1.75rem', fontWeight: 800, color: '#0f172a', lineHeight: 1.1 }}>{t('checkStaySafe')}</h1>
+        <p style={{ color: '#475569', fontSize: '0.9375rem', marginTop: '0.25rem' }}>{t('stopScams')}</p>
       </div>
 
       {/* 2. Input Card */}
@@ -100,7 +101,7 @@ export default function HomePage() {
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Paste a message, link, or upload a screenshot"
+          placeholder={t('placeholder')}
           style={{
             width: '100%',
             minHeight: '7rem',
@@ -118,7 +119,7 @@ export default function HomePage() {
             <label style={{ padding: '0.5rem 0.75rem', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '2rem', display: 'flex', alignItems: 'center', gap: '0.375rem', cursor: 'pointer', transition: 'background-color 0.2s' }}>
               <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
               <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-              <span style={{ fontSize: '0.8125rem', color: '#475569', fontWeight: 600 }}>Upload Image</span>
+              <span style={{ fontSize: '0.8125rem', color: '#475569', fontWeight: 600 }}>{t('uploadImage')}</span>
             </label>
           </div>
           <span style={{ fontSize: '0.8125rem', color: '#94a3b8' }}>{text.length}/1000</span>
@@ -148,7 +149,7 @@ export default function HomePage() {
         }}
       >
         <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        Check for Scam
+        {t('checkScam')}
       </button>
 
 
@@ -158,9 +159,9 @@ export default function HomePage() {
         <div style={{ padding: '0.375rem 0.625rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
             <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="#EA580C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.875rem', color: '#0f172a' }}>Recent Alerts</h2>
+            <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.875rem', color: '#0f172a' }}>{t('recentAlerts')}</h2>
           </div>
-          <button onClick={() => navigate('/threats')} style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 600, background: 'none', border: 'none' }}>View All →</button>
+          <button onClick={() => navigate('/threats')} style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 600, background: 'none', border: 'none' }}>{t('viewAll')}</button>
         </div>
         
         {/* Carousel Content */}
@@ -191,14 +192,14 @@ export default function HomePage() {
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.125rem' }}>
-                  <span style={{ color: currentTheme.badgeColor, fontSize: '0.5rem', fontWeight: 800, background: currentTheme.badgeBg, padding: '0.125rem 0.25rem', borderRadius: '1rem', textTransform: 'uppercase' }}>SCAM</span>
+                  <span style={{ color: currentTheme.badgeColor, fontSize: '0.5rem', fontWeight: 800, background: currentTheme.badgeBg, padding: '0.125rem 0.25rem', borderRadius: '1rem', textTransform: 'uppercase' }}>{t('scam')}</span>
                   <span style={{ fontSize: '0.5625rem', color: '#DC2626', display: 'flex', alignItems: 'center', gap: '0.125rem', fontWeight: 600 }}>
                     <svg width="0.6875rem" height="0.6875rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                    14 reports
+                    14 {t('reports')}
                   </span>
                 </div>
-                <div style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.8125rem', color: '#0f172a', lineHeight: 1.1, marginBottom: '0.125rem' }}>{alertIndex % 2 === 0 ? "Bank KYC Impersonation" : "Courier Refund Scam"}</div>
-                <div style={{ fontSize: '0.625rem', color: '#475569', lineHeight: 1.2, marginBottom: '0.25rem' }}>Fake bank messages asking for OTP and account verification links.</div>
+                <div style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.8125rem', color: '#0f172a', lineHeight: 1.1, marginBottom: '0.125rem' }}>{alertIndex % 2 === 0 ? t('bankKYC') : t('courierRefund')}</div>
+                <div style={{ fontSize: '0.625rem', color: '#475569', lineHeight: 1.2, marginBottom: '0.25rem' }}>{alertIndex % 2 === 0 ? t('bankKYCDesc') : t('courierRefundDesc')}</div>
                 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.125rem', color: '#64748b', fontSize: '0.5625rem' }}>
@@ -228,11 +229,11 @@ export default function HomePage() {
               <img src="/assets/TNPOLICELOGO.png" alt="TN Police Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <div>
-              <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.9375rem', color: '#0f172a' }}>Tamil Nadu Police Awareness</h2>
-              <p style={{ fontSize: '0.6875rem', color: '#475569' }}>Learn how to avoid getting scammed</p>
+              <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.9375rem', color: '#0f172a' }}>{t('tnPoliceAwareness')}</h2>
+              <p style={{ fontSize: '0.6875rem', color: '#475569' }}>{t('learnHowToAvoid')}</p>
             </div>
           </div>
-          <button onClick={() => navigate('/guide')} style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 600, background: 'none', border: 'none' }}>View More →</button>
+          <button onClick={() => navigate('/guide')} style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 600, background: 'none', border: 'none' }}>{t('viewMore')}</button>
         </div>
         
         <div style={{ padding: '0 1rem 1rem' }}>
@@ -250,8 +251,8 @@ export default function HomePage() {
           <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
             <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: '0.125rem' }}><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
             <div>
-              <div style={{ fontFamily: "var(--font-head)", fontWeight: '700', fontSize: '0.875rem', color: '#0f172a' }}>How to avoid getting scammed</div>
-              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Tamil Nadu Police, Government of Tamil Nadu</div>
+              <div style={{ fontFamily: "var(--font-head)", fontWeight: '700', fontSize: '0.875rem', color: '#0f172a' }}>{t('howToAvoid')}</div>
+              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>{t('tnPoliceDept')}</div>
             </div>
           </div>
         </div>
@@ -286,10 +287,10 @@ export default function HomePage() {
             </div>
             <div>
               <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '1.25rem', color: '#0f172a' }}>
-                Is this suspicious?
+                {t('checkStaySafe')}
               </h2>
               <p style={{ fontFamily: "var(--font-body)", fontSize: '0.8125rem', color: '#64748b' }}>
-                Check a message, URL or screenshot before you click.
+                {t('stopScams')}
               </p>
             </div>
           </div>
@@ -313,7 +314,7 @@ export default function HomePage() {
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
-                placeholder="Paste a message, link, or drop a screenshot here"
+                placeholder={t('placeholder')}
                 style={{
                   flex: 1,
                   width: '100%',
@@ -332,7 +333,7 @@ export default function HomePage() {
                   <label style={{ padding: '0.375rem 0.625rem', background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '1.5rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.375rem', transition: 'background-color 0.2s' }}>
                     <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
                     <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" strokeWidth="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                    <span style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>Upload Image</span>
+                    <span style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 600 }}>{t('uploadImage')}</span>
                   </label>
                 </div>
                 <span style={{ fontSize: '0.8125rem', color: '#94a3b8' }}>{text.length}/1000</span>

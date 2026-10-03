@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { LanguageProvider } from './context/LanguageContext';
 import Sidebar from './components/Sidebar';
 import TopBar from './components/TopBar';
 import HomePage from './pages/HomePage';
@@ -18,7 +19,6 @@ import AnalystDashboard from './pages/AnalystDashboard';
 
 export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [language, setLanguage] = useState('ta');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [showSettings, setShowSettings] = useState(false);
 
@@ -29,6 +29,7 @@ export default function App() {
   }, []);
 
   return (
+    <LanguageProvider initialLanguage="en">
     <BrowserRouter>
       {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
       
@@ -42,7 +43,7 @@ export default function App() {
       ) : (
         <div className="app-shell">
           <div className="main-content">
-            <MobileTopBar language={language} onLanguageToggle={setLanguage} onOpenSettings={() => setShowSettings(true)} />
+            <MobileTopBar onOpenSettings={() => setShowSettings(true)} />
             <main className="page-scroll" style={{ paddingBottom: 'calc(4.5rem + env(safe-area-inset-bottom))' }}>
               <Routes>
                 <Route path="/" element={<HomePage />} />
@@ -59,6 +60,7 @@ export default function App() {
         </div>
       )}
     </BrowserRouter>
+    </LanguageProvider>
   );
 }
 
