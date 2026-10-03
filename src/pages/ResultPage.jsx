@@ -1,7 +1,7 @@
 // src/pages/ResultPage.jsx — scam analysis result with local heuristic fallback
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { analyzeLocally, analyzeWithGemini, VERDICT_META } from '../utils/analyze';
+import { analyzeWithGemini, VERDICT_META } from '../utils/analyze';
 
 const SIGNAL_ICONS = {
   link: 'M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71',
@@ -31,7 +31,6 @@ export default function ResultPage() {
   useEffect(() => {
     if (!text && !location.state?.imageBase64) return;
     let cancelled = false;
-    const local = analyzeLocally(text);
 
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
     const controller = new AbortController();
@@ -43,26 +42,30 @@ export default function ResultPage() {
       .then((data) => {
         if (cancelled) return;
         if (data && typeof data.score === 'number' && data.verdict) {
-          setResult({ ...local, ...data, similarReports: data.similarReports ?? local.similarReports });
+          setResult(data);
         } else {
-          setResult(local);
+          setResult({
+            score: 0,
+            verdict: 'safe',
+            signals: [],
+            urls: [],
+          });
         }
       })
       .catch((err) => { 
         console.error("Analysis error:", err);
         if (!cancelled) {
           setResult({
-            ...local,
-            score: text ? local.score : 0,
-            verdict: text ? local.verdict : 'suspicious',
+            score: 0,
+            verdict: 'suspicious',
             signals: [
-              ...local.signals,
               {
                 key: 'brand',
                 title: 'AI Analysis Failed',
                 detail: 'Our AI engine is currently unavailable (API Error). Advanced scanning was disabled.'
               }
-            ]
+            ],
+            urls: [],
           });
         }
       })
@@ -89,7 +92,7 @@ export default function ResultPage() {
     );
   }
 
-  const r = result || analyzeLocally(text);
+  const r = result || { score: 0, verdict: 'safe', signals: [], urls: [] };
   const meta = VERDICT_META[r.verdict] || VERDICT_META.suspicious;
 
   const shareWarning = async () => {
