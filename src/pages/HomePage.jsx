@@ -100,14 +100,6 @@ export default function HomePage() {
               <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
               <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             </label>
-            {supportsSpeech && (
-              <button onClick={handleVoice} style={{ padding: '0.375rem', background: isRecording ? '#FEE2E2' : '#F1F5F9', border: 'none', borderRadius: '0.25rem', display: 'flex', cursor: 'pointer' }}>
-                <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke={isRecording ? '#DC2626' : '#64748b'} strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
-              </button>
-            )}
-            <button style={{ padding: '0.375rem', background: '#F1F5F9', border: 'none', borderRadius: '0.25rem', display: 'flex' }}>
-              <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-            </button>
           </div>
           <span style={{ fontSize: '0.8125rem', color: '#94a3b8' }}>{text.length}/1000</span>
         </div>
@@ -253,11 +245,6 @@ export default function HomePage() {
                     <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
                     <svg width="0.875rem" height="0.875rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
                   </label>
-                  {supportsSpeech && (
-                    <button onClick={handleVoice} style={{ padding: '0.25rem', background: isRecording ? '#FEE2E2' : '#fff', border: '1px solid #E6EAF2', borderRadius: '0.25rem', cursor: 'pointer', display: 'flex' }}>
-                      <svg width="0.875rem" height="0.875rem" viewBox="0 0 24 24" fill="none" stroke={isRecording ? '#DC2626' : '#64748b'} strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
-                    </button>
-                  )}
                 </div>
                 <span style={{ fontSize: '0.8125rem', color: '#94a3b8' }}>{text.length}/1000</span>
               </div>
