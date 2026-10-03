@@ -271,7 +271,10 @@ export async function analyzeWithGemini(text, imageBase64 = null) {
   const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
   const prompt = `
-Analyze the following message for scams, phishing, or malicious intent. 
+You are an expert cybersecurity and anti-fraud system. 
+Analyze the following text message AND/OR the text inside the provided image screenshot for scams, phishing, or malicious intent. 
+If an image is provided, EXTRACT ALL TEXT from it (OCR) and analyze that text. Often images contain fake bank alerts (e.g. SBI, HDFC), fake reward points, or malicious shortlinks (tinyurl, bit.ly, etc).
+
 Provide a JSON response with the following structure (no markdown, just raw JSON):
 {
   "score": <number between 0 and 100, where 100 is highly malicious/scam and 0 is safe>,
@@ -296,7 +299,7 @@ Message to analyze:
 `;
 
   try {
-    const contents = [{ text: prompt }];
+    const contents = [prompt];
     if (imageBase64) {
       const match = imageBase64.match(/^data:(.*?);base64,(.*)$/);
       if (match) {
