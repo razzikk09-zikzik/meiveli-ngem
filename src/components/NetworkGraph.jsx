@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
-import { ForceGraph2D } from 'react-force-graph-2d';
+import ForceGraph2D from 'react-force-graph-2d';
 
 export default function NetworkGraph({ reports = [], selectedCampaign = null, onSelect = () => {}, width, height }) {
   const fgRef = useRef();
