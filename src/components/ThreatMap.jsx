@@ -30,6 +30,8 @@ function MapController({ hotspots, selectedArea }) {
     setTimeout(() => {
       if (map) map.invalidateSize();
     }, 100);
+
+    const container = map.getContainer();
     if (container) {
       resizeObserver.observe(container);
     }
