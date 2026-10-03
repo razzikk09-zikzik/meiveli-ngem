@@ -78,11 +78,8 @@ export const navItems = [
 
 export const reportTiles = [
   { id: 'sms', label: 'SMS', iconUrl: '/assets/sms.png', color: '#2563EB' },
-  { id: 'call', label: 'Phone Call', iconUrl: '/assets/phone_call.png', color: '#16A34A' },
   { id: 'whatsapp', label: 'WhatsApp', iconUrl: '/assets/whatsapp.png', color: '#16A34A' },
   { id: 'website', label: 'Website / URL', iconUrl: '/assets/website_url.png', color: '#2563EB' },
-  { id: 'upi', label: 'UPI / Payment', iconUrl: '/assets/upi_payment.png', color: '#DC2626' },
-  { id: 'job', label: 'Job Offer', iconUrl: '/assets/job_offer.png', color: '#7C3AED' },
 ];
 
 export const scamCards = [

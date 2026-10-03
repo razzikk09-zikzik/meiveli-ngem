@@ -78,6 +78,9 @@ export const translations = {
     call1930: "If you lost money, call 1930 immediately — the national cybercrime helpline.",
     backHome: "Back to Home",
     reportAnother: "Report another scam",
+    sms: "SMS",
+    whatsapp: "WhatsApp",
+    website: "Website",
 
     // Threats Page
     activeThreats: "Active threats",
@@ -189,6 +192,9 @@ export const translations = {
     call1930: "நீங்கள் பணத்தை இழந்திருந்தால், உடனடியாக 1930 என்ற தேசிய சைபர் கிரைம் உதவி எண்ணை அழைக்கவும்.",
     backHome: "முகப்பிற்குத் திரும்பு",
     reportAnother: "மற்றொரு மோசடியைப் புகாரளி",
+    sms: "குறுஞ்செய்தி",
+    whatsapp: "வாட்ஸ்அப்",
+    website: "இணையதளம்",
 
     // Threats Page
     activeThreats: "தற்போதைய அச்சுறுத்தல்கள்",

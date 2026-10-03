@@ -478,7 +478,7 @@ export default function HomePage() {
           <span style={{ fontSize: '0.875rem', color: '#475569', marginLeft: '0.25rem' }}>What did you receive?</span>
         </div>
 
-        <div className="report-tiles-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '0.75rem' }}>
+        <div className="report-tiles-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.75rem' }}>
           {reportTiles.map(tile => (
               <button
                 key={tile.id}
@@ -500,7 +500,7 @@ export default function HomePage() {
                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#E6EAF2'; e.currentTarget.style.boxShadow = 'none'; }}
               >
                 <img src={tile.iconUrl} alt={tile.label} style={{ width: '1.875rem', height: '1.875rem', objectFit: 'contain' }} />
-                <span style={{ fontFamily: "var(--font-head)", fontWeight: '700', fontSize: '0.9rem', color: '#0f172a' }}>{tile.label}</span>
+                <span style={{ fontFamily: "var(--font-head)", fontWeight: '700', fontSize: '0.9rem', color: '#0f172a' }}>{t(tile.id) || tile.label}</span>
               </button>
             )
           )}
