@@ -35,7 +35,7 @@ export async function analyzeWithGemini(text, imageBase64 = null) {
   
   const genAI = new GoogleGenerativeAI(apiKey);
   const model = genAI.getGenerativeModel({ 
-    model: 'gemini-3.8-flash',
+    model: 'gemini-3.5-flash-lite',
     generationConfig: {
       temperature: 0.1, // low randomness
       responseMimeType: "application/json",
@@ -140,11 +140,15 @@ Message to analyze:
       score = 95;
     }
 
+    const LINK_RE = /(https?:\/\/[^\s]+|www\.[^\s]+|\b[\w-]+\.[a-z]{2,}\b[^\s]*)/gi;
+    const fallbackUrls = (text || '').match(LINK_RE) || [];
+    const finalUrls = parsed.detected_urls?.length > 0 ? parsed.detected_urls : fallbackUrls;
+
     return {
       score,
       verdict: parsed.classification.toLowerCase(),
       signals: parsed.signals ? parsed.signals.slice(0, 4) : [],
-      urls: parsed.detected_urls || [],
+      urls: finalUrls,
       similarReports: parsed.classification !== 'SAFE' ? 'Seen in multiple reports from your area' : null,
     };
   } catch (err) {
