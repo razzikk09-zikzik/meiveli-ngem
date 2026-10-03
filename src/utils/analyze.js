@@ -195,11 +195,11 @@ export const VERDICT_META = {
   },
 };
 
-export async function analyzeWithGemini(text) {
-  const tLower = text.toLowerCase();
+export async function analyzeWithGemini(text, imageBase64 = null) {
+  const tLower = (text || '').toLowerCase();
   
   // Local list checks first
-  const urls = text.match(LINK_RE) || [];
+  const urls = (text || '').match(LINK_RE) || [];
   const foundBadLink = urls.find(u => {
     let domain = u.replace(/^https?:\/\//i, '').split('/')[0].toLowerCase();
     return KNOWN_BAD_LINKS.has(domain) || KNOWN_BAD_LINKS.has(domain.replace(/^www\./i, ''));
@@ -269,7 +269,20 @@ Message to analyze:
 `;
 
   try {
-    const result = await model.generateContent(prompt);
+    const contents = [{ text: prompt }];
+    if (imageBase64) {
+      const match = imageBase64.match(/^data:(.*?);base64,(.*)$/);
+      if (match) {
+        contents.push({
+          inlineData: {
+            mimeType: match[1],
+            data: match[2]
+          }
+        });
+      }
+    }
+
+    const result = await model.generateContent(contents);
     const response = await result.response;
     let textRes = response.text();
     // Strip markdown if present
@@ -278,7 +291,7 @@ Message to analyze:
     const parsed = JSON.parse(textRes);
     
     // Fallback urls parsing
-    const urls = text.match(LINK_RE) || [];
+    const urls = (text || '').match(LINK_RE) || [];
     parsed.urls = urls;
     
     return parsed;

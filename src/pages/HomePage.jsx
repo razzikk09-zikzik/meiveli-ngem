@@ -5,6 +5,8 @@ import { reportTiles, scamCards } from '../data/mock';
 
 export default function HomePage() {
   const [text, setText] = useState('');
+  const [imageBase64, setImageBase64] = useState(null);
+  const [isRecording, setIsRecording] = useState(false);
   const [supportsSpeech] = useState('SpeechRecognition' in window || 'webkitSpeechRecognition' in window);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [language, setLanguage] = useState('en');
@@ -15,6 +17,36 @@ export default function HomePage() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const handleVoice = () => {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+    const recognition = new SpeechRecognition();
+    recognition.lang = language === 'en' ? 'en-US' : language === 'ta' ? 'ta-IN' : 'en-IN';
+    recognition.onstart = () => setIsRecording(true);
+    recognition.onend = () => setIsRecording(false);
+    recognition.onresult = (event) => {
+      setText((prev) => (prev + ' ' + event.results[0][0].transcript).trim());
+    };
+    recognition.start();
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImageBase64(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const submit = () => {
+    if (text.trim() || imageBase64) {
+      navigate('/result', { state: { text, imageBase64 } });
+    }
+  };
 
   const cardStyle = {
     background: '#ffffff',
@@ -37,6 +69,12 @@ export default function HomePage() {
 
       {/* 2. Input Card */}
       <div style={{ ...cardStyle, padding: '0.75rem', gap: '0.5rem' }}>
+        {imageBase64 && (
+          <div style={{ position: 'relative', width: 'fit-content' }}>
+            <img src={imageBase64} alt="Upload preview" style={{ height: '4rem', borderRadius: '0.25rem', objectFit: 'cover' }} />
+            <button onClick={() => setImageBase64(null)} style={{ position: 'absolute', top: '-0.25rem', right: '-0.25rem', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '1rem', height: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', cursor: 'pointer' }}>×</button>
+          </div>
+        )}
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
@@ -55,12 +93,13 @@ export default function HomePage() {
         />
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <button style={{ padding: '0.375rem', background: '#F1F5F9', border: 'none', borderRadius: '0.25rem', display: 'flex' }}>
+            <label style={{ padding: '0.375rem', background: '#F1F5F9', border: 'none', borderRadius: '0.25rem', display: 'flex', cursor: 'pointer' }}>
+              <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
               <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            </button>
+            </label>
             {supportsSpeech && (
-              <button style={{ padding: '0.375rem', background: '#F1F5F9', border: 'none', borderRadius: '0.25rem', display: 'flex' }}>
-                <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+              <button onClick={handleVoice} style={{ padding: '0.375rem', background: isRecording ? '#FEE2E2' : '#F1F5F9', border: 'none', borderRadius: '0.25rem', display: 'flex', cursor: 'pointer' }}>
+                <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke={isRecording ? '#DC2626' : '#64748b'} strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
               </button>
             )}
             <button style={{ padding: '0.375rem', background: '#F1F5F9', border: 'none', borderRadius: '0.25rem', display: 'flex' }}>
@@ -81,7 +120,7 @@ export default function HomePage() {
 
       {/* 4. Check Now Button */}
       <button
-        onClick={() => { if (text.trim()) navigate('/result', { state: { text } }); }}
+        onClick={submit}
         style={{
           width: '100%',
           padding: '0.875rem',
@@ -239,12 +278,13 @@ export default function HomePage() {
               />
               <div style={{ padding: '0.5rem 0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid #E6EAF2' }}>
                 <div style={{ display: 'flex', gap: '0.5rem' }}>
-                  <button style={{ padding: '0.25rem', background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.25rem', cursor: 'pointer', display: 'flex' }}>
+                  <label style={{ padding: '0.25rem', background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.25rem', cursor: 'pointer', display: 'flex' }}>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: 'none' }} />
                     <svg width="0.875rem" height="0.875rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                  </button>
+                  </label>
                   {supportsSpeech && (
-                    <button style={{ padding: '0.25rem', background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.25rem', cursor: 'pointer', display: 'flex' }}>
-                      <svg width="0.875rem" height="0.875rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
+                    <button onClick={handleVoice} style={{ padding: '0.25rem', background: isRecording ? '#FEE2E2' : '#fff', border: '1px solid #E6EAF2', borderRadius: '0.25rem', cursor: 'pointer', display: 'flex' }}>
+                      <svg width="0.875rem" height="0.875rem" viewBox="0 0 24 24" fill="none" stroke={isRecording ? '#DC2626' : '#64748b'} strokeWidth="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg>
                     </button>
                   )}
                 </div>
@@ -252,6 +292,13 @@ export default function HomePage() {
               </div>
             </div>
             
+            {imageBase64 && (
+              <div style={{ position: 'relative', width: 'fit-content' }}>
+                <img src={imageBase64} alt="Upload preview" style={{ height: '4rem', borderRadius: '0.25rem', objectFit: 'cover', border: '1px solid #E6EAF2' }} />
+                <button onClick={() => setImageBase64(null)} style={{ position: 'absolute', top: '-0.25rem', right: '-0.25rem', background: 'red', color: 'white', border: 'none', borderRadius: '50%', width: '1rem', height: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem', cursor: 'pointer' }}>×</button>
+              </div>
+            )}
+
             <div style={{ textAlign: 'center', fontSize: '0.8125rem', color: '#475569' }}>
               Supports <span style={{ fontFamily: "var(--font-tamil)" }}>தமிழ்</span> · English · Tanglish · Private by default, nothing stored unless you report.
             </div>
@@ -284,7 +331,7 @@ export default function HomePage() {
             </div>
 
             <button
-              onClick={() => { if (text.trim()) navigate('/result', { state: { text } }); }}
+              onClick={submit}
               style={{
                 width: '100%',
                 padding: '0.75rem',

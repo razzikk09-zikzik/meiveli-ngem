@@ -29,7 +29,7 @@ export default function ResultPage() {
   const [shared, setShared] = useState(false);
 
   useEffect(() => {
-    if (!text) return;
+    if (!text && !location.state?.imageBase64) return;
     let cancelled = false;
     const local = analyzeLocally(text);
 
@@ -37,7 +37,9 @@ export default function ResultPage() {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), 15000);
 
-    analyzeWithGemini(text)
+    const imageBase64 = location.state?.imageBase64 || null;
+
+    analyzeWithGemini(text, imageBase64)
       .then((data) => {
         if (cancelled) return;
         if (data && typeof data.score === 'number' && data.verdict) {
@@ -55,8 +57,8 @@ export default function ResultPage() {
     return () => { cancelled = true; controller.abort(); clearTimeout(timer); };
   }, [text]);
 
-  // Direct visit without text
-  if (!text) {
+  // Direct visit without text or image
+  if (!text && !location.state?.imageBase64) {
     return (
       <div style={{ padding: '1rem', maxWidth: '32rem', margin: '0 auto' }}>
         <div style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.875rem', padding: '2rem 1rem', textAlign: 'center' }}>
@@ -122,7 +124,10 @@ export default function ResultPage() {
       {/* Analysed message */}
       <div style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.875rem', padding: '1rem' }}>
         <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '0.9375rem', color: '#0f172a', marginBottom: '0.5rem' }}>Analysed message</h2>
-        <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: 1.55, wordBreak: 'break-word' }}>{text}</p>
+        {location.state?.imageBase64 && (
+          <img src={location.state.imageBase64} alt="Uploaded screenshot" style={{ width: '100%', maxWidth: '16rem', borderRadius: '0.5rem', marginBottom: '0.75rem', border: '1px solid #E6EAF2' }} />
+        )}
+        <p style={{ fontSize: '0.875rem', color: '#334155', lineHeight: 1.55, wordBreak: 'break-word' }}>{text || (location.state?.imageBase64 ? 'Image scan' : '')}</p>
       </div>
 
       {/* What we found */}
