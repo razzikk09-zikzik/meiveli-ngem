@@ -51,8 +51,31 @@ export function analyzeLocally(rawText) {
 
   const urls = text.match(LINK_RE) || [];
 
+  const foundBadLink = urls.find(u => {
+    let domain = u.replace(/^https?:\/\//i, '').split('/')[0].toLowerCase();
+    return KNOWN_BAD_LINKS.has(domain) || KNOWN_BAD_LINKS.has(domain.replace(/^www\./i, ''));
+  });
+  if (foundBadLink) {
+    score += 100;
+    signals.push({
+      key: 'domain',
+      title: 'Known malicious link',
+      detail: `This link is present in a database of known scams.`,
+    });
+  }
+
+  const foundBadTerm = KNOWN_BAD_TERMS.find(term => t.includes(term));
+  if (foundBadTerm) {
+    score += 85;
+    signals.push({
+      key: 'urgency',
+      title: 'Known scam phrasing',
+      detail: `The message uses phrases common in known scams.`,
+    });
+  }
+
   // Links present at all
-  if (urls.length > 0) {
+  if (urls.length > 0 && !foundBadLink) {
     score += 18;
     signals.push({
       key: 'link',
@@ -183,6 +206,34 @@ export async function analyzeWithGemini(text) {
   });
   
   const foundBadTerm = KNOWN_BAD_TERMS.find(term => tLower.includes(term));
+
+  if (foundBadLink) {
+    return {
+      score: 100,
+      verdict: 'scam',
+      signals: [{
+        key: 'domain',
+        title: 'Known malicious link',
+        detail: `This link is present in a database of known scams (${foundBadLink}).`
+      }],
+      urls,
+      similarReports: 'Seen in multiple reports from your area',
+    };
+  }
+
+  if (foundBadTerm) {
+    return {
+      score: 90,
+      verdict: 'scam',
+      signals: [{
+        key: 'urgency',
+        title: 'Known scam phrasing',
+        detail: `The message uses phrases common in known scams.`
+      }],
+      urls,
+      similarReports: 'Seen in multiple reports from your area',
+    };
+  }
 
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   if (!apiKey) {
