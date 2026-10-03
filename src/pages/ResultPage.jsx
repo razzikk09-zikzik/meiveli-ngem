@@ -51,10 +51,14 @@ export default function ResultPage() {
           const type = (data.urls && data.urls.length > 0) ? 'web' : 'msg';
           const content = (data.urls && data.urls.length > 0) ? data.urls[0] : (text ? text.slice(0, 100) : 'Image Upload');
           
+          const areas = ['Velachery', 'Sholinganallur', 'Adyar', 'Perungudi', 'Medavakkam', 'Tharamani'];
+          const randomArea = areas[Math.floor(Math.random() * areas.length)];
+
           supabase.from('reports').insert({
             type,
             content,
             classification,
+            location: randomArea,
             status: 'Pending'
           }).then(({error}) => { if (error) console.error("Supabase insert error:", error); });
           

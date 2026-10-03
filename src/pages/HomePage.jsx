@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ScamMap from '../components/ScamMap';
+import ThreatMap from '../components/ThreatMap';
+import { useHotspots } from '../hooks/useHotspots';
 import { reportTiles, scamCards } from '../data/mock';
 
 export default function HomePage() {
@@ -11,6 +12,7 @@ export default function HomePage() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [language, setLanguage] = useState('en');
   const navigate = useNavigate();
+  const { hotspots } = useHotspots(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -380,7 +382,7 @@ export default function HomePage() {
           </div>
 
           <div style={{ flex: 1, minHeight: 0, position: 'relative', borderRadius: '0.5rem', overflow: 'hidden', border: '1px solid #E6EAF2' }}>
-            <ScamMap />
+            <ThreatMap hotspots={hotspots} mode="citizen" />
           </div>
         </div>
       </div>

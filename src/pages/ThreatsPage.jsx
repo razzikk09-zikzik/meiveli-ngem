@@ -1,6 +1,7 @@
 // src/pages/ThreatsPage.jsx — active threats map + filterable list
 import { useState } from 'react';
-import ScamMap from '../components/ScamMap';
+import ThreatMap from '../components/ThreatMap';
+import { useHotspots } from '../hooks/useHotspots';
 
 const THREATS = [
   { id: 1, title: 'Fake SBI KYC link', category: 'Bank KYC', area: 'Velachery', reports: 14, iconUrl: '/assets/bank_kyc_impersonation.png', color: '#DC2626', bg: '#FEF2F2' },
@@ -27,6 +28,7 @@ export default function ThreatsPage() {
   const [category, setCategory] = useState('All');
   const [area, setArea] = useState('All areas');
   const [time, setTime] = useState('Last 7 days');
+  const { hotspots } = useHotspots(false);
 
   const filtered = THREATS.filter(
     (t) => (category === 'All' || t.category === category) && (area === 'All areas' || t.area === area),
@@ -72,7 +74,7 @@ export default function ThreatsPage() {
 
       {/* Map */}
       <div style={{ height: '38vh', minHeight: '16rem', position: 'relative', borderRadius: '0.75rem', overflow: 'hidden', border: '1px solid #E6EAF2', zIndex: 0 }}>
-        <ScamMap />
+        <ThreatMap hotspots={hotspots} mode="citizen" />
       </div>
 
       {/* Threat list */}
