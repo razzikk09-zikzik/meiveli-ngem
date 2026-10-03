@@ -145,7 +145,7 @@ export default function HomePage() {
         </div>
         
         {/* Carousel Content */}
-        <div style={{ position: 'relative', background: '#FFF9F0', padding: '1.25rem 1rem', margin: '0 0.5rem 0.5rem', borderRadius: '0.75rem', border: '1px solid #FEF08A' }}>
+        <div style={{ position: 'relative', background: '#FFF9F0', padding: '0.875rem 1rem', margin: '0 0.5rem 0.5rem', borderRadius: '0.75rem', border: '1px solid #FEF08A' }}>
           {/* Navigation Arrows */}
           <button 
             onClick={() => setAlertIndex(prev => prev === 0 ? 3 : prev - 1)}
@@ -161,9 +161,9 @@ export default function HomePage() {
           </button>
 
           {/* Slide Content */}
-          <div style={{ padding: '0 2rem' }}>
+          <div style={{ padding: '0 1.5rem' }}>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <div style={{ width: '3rem', height: '3rem', borderRadius: '0.5rem', background: '#FEE2E2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <div style={{ width: '2.5rem', height: '2.5rem', borderRadius: '0.5rem', background: '#FEE2E2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 {alertIndex % 2 === 0 ? (
                   <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="10" width="16" height="10" rx="2" ry="2"/><path d="M12 14v4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
                 ) : (
@@ -193,7 +193,7 @@ export default function HomePage() {
           </div>
           
           {/* Dots */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.375rem', marginTop: '1rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.375rem', marginTop: '0.625rem' }}>
             {[0, 1, 2, 3].map(i => (
               <div key={i} style={{ width: '0.4rem', height: '0.4rem', borderRadius: '50%', background: i === alertIndex ? '#3B82F6' : '#CBD5E1' }} />
             ))}
@@ -205,8 +205,8 @@ export default function HomePage() {
       <div style={{ ...cardStyle, marginTop: '0.5rem' }}>
         <div style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-            <div style={{ width: '1.75rem', height: '1.75rem', borderRadius: '50%', background: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="#fff" stroke="#fff" strokeWidth="2" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <div style={{ width: '2rem', height: '2rem', borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src="/assets/TNPOLICELOGO.png" alt="TN Police Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <div>
               <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '1rem', color: '#0f172a' }}>Tamil Nadu Police Awareness</h2>
