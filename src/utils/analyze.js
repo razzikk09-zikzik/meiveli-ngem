@@ -1,4 +1,6 @@
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import { buildDomainIntelligence } from './domainAnalyzer';
+import { INDIAN_SCAM_PATTERNS } from './scamPatterns';
 
 export const VERDICT_META = {
   scam: {
@@ -42,6 +44,8 @@ export async function analyzeWithGemini(text, imageBase64 = null) {
     }
   });
 
+  const domainIntelligence = buildDomainIntelligence(text);
+  
   const prompt = `You are MEYVIZHI's scam detection AI.
 
 Analyze the provided message, URL and/or screenshot.
@@ -49,32 +53,29 @@ Analyze the provided message, URL and/or screenshot.
 First identify observable facts.
 Then identify scam indicators.
 
-Check for:
-- impersonation
-- urgency
-- account blocking threats
-- OTP/PIN/CVV/password requests
-- payment requests
-- phishing links
-- suspicious verification requests
-- fake bank/government/courier/job messages
-- social engineering
-- suspicious domain names
-- typosquatting
+${INDIAN_SCAM_PATTERNS}
 
-CRITICAL RULE FOR SBI: 
-The ONLY official domains for State Bank of India (SBI) are "sbi.co.in", "onlinesbi.sbi", and "bank.sbi".
-If a message claims to be from SBI (or mentions SBI KYC/rewards) but contains ANY link that is NOT on these exact official domains (including shorteners like tinyurl/bit.ly or fakes like sbi-kyc.xyz), you MUST classify it as SCAM with HIGH risk.
+DOMAIN INTELLIGENCE CONTEXT:
+The following structured intelligence was extracted from the URLs in the message:
+${JSON.stringify(domainIntelligence, null, 2)}
+
+IMPORTANT RULES:
+1. Trusted domain is a strong positive legitimacy signal.
+2. Trusted domain does NOT automatically make the message safe (check for malware/phishing inside trusted hosts, though rare).
+3. Random path is NOT evidence of phishing (e.g. digital.licindia.in/7kmJRrg is safe).
+4. Suspicious TLD is only a weak/moderate signal.
+5. Unknown domain is not automatically a scam.
+6. Brand name in a domain does not make it official.
+7. Only registered-domain matching establishes trusted ownership.
+8. If claimed organization and actual domain disagree (brandMismatch=true), increase suspicion significantly.
+9. Strong scam behavior (e.g., asking for UPI PIN to receive money) can override trusted-domain confidence.
+10. Do not invent threat reports.
+11. Do not claim a URL was independently verified unless it actually was verified by an available source.
 
 If an image is provided, inspect the original image directly.
 Use OCR only as supporting information.
 
 Do NOT invent text, URLs, companies, threat reports or malicious behavior.
-
-An unknown URL is NOT automatically a scam.
-An unfamiliar domain is NOT automatically a scam.
-A suspicious TLD alone is NOT enough to classify something as a scam.
-
 Classify only from the evidence provided.
 
 DO NOT generate numerical scores or percentages.
