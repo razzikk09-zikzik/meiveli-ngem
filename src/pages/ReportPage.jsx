@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { reportTiles } from '../data/mock';
+import { supabase } from '../utils/supabase';
+import { buildDomainIntelligence } from '../utils/domainAnalyzer';
 
 const AREAS = [
   'South Chennai', 'Velachery', 'Adyar', 'Sholinganallur', 'Perungudi',
@@ -51,9 +53,50 @@ export default function ReportPage() {
   const [area, setArea] = useState('South Chennai');
   const [reportId, setReportId] = useState(null);
 
-  const submit = () => {
-    setReportId(`MV-${Math.floor(1000 + Math.random() * 9000)}`);
-    setStep(3);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  const submit = async () => {
+    if (!message || message.trim() === '') {
+      setErrorMsg("Please provide some details.");
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setErrorMsg(null);
+
+    // 1. Run local domain intelligence
+    const intel = buildDomainIntelligence(message);
+    
+    // Check if the report contains a strictly verified official domain
+    const hasTrustedDomain = intel.some(d => d.trusted && !d.signals.brandMismatch);
+    
+    const classification = hasTrustedDomain ? 'Safe' : 'Suspicious';
+    const status = hasTrustedDomain ? 'auto_rejected' : 'pending';
+
+    // Generate a random ID for the UI
+    const randomId = `MV-${Math.floor(1000 + Math.random() * 9000)}`;
+    
+    // 2. Insert into Supabase
+    try {
+      const { error } = await supabase.from('reports').insert([{
+        type: type || 'other',
+        content: message,
+        area: area,
+        classification: classification,
+        status: status,
+      }]);
+
+      if (error) throw error;
+
+      setReportId(randomId);
+      setStep(3);
+    } catch (e) {
+      console.error(e);
+      setErrorMsg("Failed to submit report. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const sectionTitle = { fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a', marginBottom: '0.625rem' };
@@ -162,19 +205,33 @@ export default function ReportPage() {
               Your report is <strong>anonymous by default</strong>. This helps keep you and others safe.
             </p>
           </div>
+          
+          {errorMsg && (
+            <div style={{ color: '#DC2626', fontSize: '0.875rem', textAlign: 'center', fontWeight: '500' }}>
+              {errorMsg}
+            </div>
+          )}
 
           <button
             onClick={submit}
+            disabled={isSubmitting}
             style={{
               width: '100%', padding: '0.875rem', borderRadius: '2rem', border: 'none',
               background: 'linear-gradient(90deg, #1D6FF2 0%, #7C5CF5 100%)', color: '#fff',
               fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '1rem',
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem',
-              boxShadow: '0 4px 12px rgba(29, 111, 242, 0.25)', cursor: 'pointer',
+              boxShadow: '0 4px 12px rgba(29, 111, 242, 0.25)', cursor: isSubmitting ? 'not-allowed' : 'pointer',
+              opacity: isSubmitting ? 0.7 : 1,
             }}
           >
-            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
-            Submit report
+            {isSubmitting ? (
+               <span>Submitting...</span>
+            ) : (
+              <>
+                <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
+                Submit report
+              </>
+            )}
           </button>
         </>
       )}
