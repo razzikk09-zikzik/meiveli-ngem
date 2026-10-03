@@ -14,9 +14,12 @@ const THREATS_TEMPLATE = [
 
 const CATEGORIES = ['All', 'Bank KYC', 'Courier', 'UPI', 'Job offer', 'Fake link'];
 
+import { useLanguage } from '../context/LanguageContext';
+
 export default function ThreatsPage() {
   const [category, setCategory] = useState('All');
   const { hotspots } = useHotspots(false);
+  const { t } = useLanguage();
 
   // Merge hotspots with template so counts match everywhere
   const dynamicThreats = THREATS_TEMPLATE.map(t => {
@@ -45,8 +48,8 @@ export default function ThreatsPage() {
     <div style={{ padding: '1rem', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))', display: 'flex', flexDirection: 'column', gap: '0.875rem', maxWidth: '32rem', margin: '0 auto', width: '100%' }}>
       {/* Title & Subtitle */}
       <div>
-        <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>Active threats</h1>
-        <p style={{ color: '#475569', fontSize: '0.875rem', marginTop: '0.25rem' }}>What's happening in South Chennai right now.</p>
+        <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>{t('activeThreats')}</h1>
+        <p style={{ color: '#475569', fontSize: '0.875rem', marginTop: '0.25rem' }}>{t('threatsDesc')}</p>
       </div>
 
       {/* Scam-type chip row */}
@@ -65,7 +68,7 @@ export default function ThreatsPage() {
                   fontFamily: 'var(--font-head)',
                 }}
               >
-                {c}
+                {c === 'All' ? t('all') : c}
               </button>
             );
           })}
@@ -82,7 +85,7 @@ export default function ThreatsPage() {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
         {filtered.length === 0 && (
           <div style={{ background: '#fff', border: '1px dashed #CBD5E1', borderRadius: '0.75rem', padding: '1.25rem', textAlign: 'center', color: '#64748b', fontSize: '0.875rem' }}>
-            No threats match this filter right now. 🎉
+            {t('noThreats')}
           </div>
         )}
         {filtered.map((t) => (
@@ -100,7 +103,7 @@ export default function ThreatsPage() {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a' }}>{t.title}</div>
               <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.125rem' }}>
-                {t.area} · <span style={{ color: '#DC2626', fontWeight: '700' }}>{t.reports} {t.reports === 1 ? 'report' : 'reports'}</span>
+                {t(t.area) || t.area} · <span style={{ color: '#DC2626', fontWeight: '700' }}>{t.reports} {t.reports === 1 ? t('reportSingular') : t('reportsPlural')}</span>
               </div>
             </div>
             <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="9 18 15 12 9 6" /></svg>

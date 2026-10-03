@@ -52,14 +52,17 @@ const FAQS = [
   },
 ];
 
+import { useLanguage } from '../context/LanguageContext';
+
 export default function HelpPage() {
   const [open, setOpen] = useState(null);
+  const { t } = useLanguage();
 
   return (
     <div style={{ padding: '1rem', paddingBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '32rem', margin: '0 auto', width: '100%' }}>
       <div>
-        <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>Help and resources</h1>
-        <p style={{ color: '#475569', fontSize: '0.875rem', marginTop: '0.25rem' }}>Where to turn if you've been scammed.</p>
+        <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>{t('helpRes')}</h1>
+        <p style={{ color: '#475569', fontSize: '0.875rem', marginTop: '0.25rem' }}>{t('whereToTurn')}</p>
       </div>
 
       {/* Helplines */}
@@ -71,9 +74,9 @@ export default function HelpPage() {
                 <h.icon size={22} color={h.color} strokeWidth={2.25} />
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1rem', color: '#0f172a' }}>{h.title}</div>
-                <div style={{ fontSize: '0.8125rem', color: '#475569' }}>{h.desc}</div>
-                <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{h.sub}</div>
+                <div style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1rem', color: '#0f172a' }}>{t(h.title) || h.title}</div>
+                <div style={{ fontSize: '0.8125rem', color: '#475569' }}>{t(h.desc) || h.desc}</div>
+                <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{t(h.sub) || h.sub}</div>
               </div>
               <ChevronRight size={18} color="#94A3B8" style={{ flexShrink: 0 }} />
             </>
@@ -93,18 +96,18 @@ export default function HelpPage() {
 
       {/* FAQ accordion */}
       <div style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.875rem', padding: '1rem', boxShadow: '0 1px 3px rgba(16,24,40,0.05)' }}>
-        <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1rem', color: '#0f172a', marginBottom: '0.25rem' }}>Common questions</h2>
+        <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1rem', color: '#0f172a', marginBottom: '0.25rem' }}>{t('commonQ')}</h2>
         {FAQS.map((f, i) => (
           <div key={f.q} style={{ borderBottom: i < FAQS.length - 1 ? '1px solid #F1F5F9' : 'none' }}>
             <button
               onClick={() => setOpen(open === i ? null : i)}
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', width: '100%', padding: '0.75rem 0', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'left' }}
             >
-              <span style={{ fontFamily: 'var(--font-head)', fontWeight: '600', fontSize: '0.9375rem', color: '#1e293b' }}>{f.q}</span>
+              <span style={{ fontFamily: 'var(--font-head)', fontWeight: '600', fontSize: '0.9375rem', color: '#1e293b' }}>{t(f.q) || f.q}</span>
               {open === i ? <ChevronDown size={18} color="#2563EB" style={{ flexShrink: 0 }} /> : <ChevronRight size={18} color="#94A3B8" style={{ flexShrink: 0 }} />}
             </button>
             {open === i && (
-              <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.55, padding: '0 0 0.875rem' }}>{f.a}</p>
+              <p style={{ fontSize: '0.875rem', color: '#475569', lineHeight: 1.55, padding: '0 0 0.875rem' }}>{t(f.a) || f.a}</p>
             )}
           </div>
         ))}
@@ -118,7 +121,7 @@ export default function HelpPage() {
         </div>
         <div style={{ fontSize: '0.8125rem', color: '#2563EB', fontWeight: '600', marginTop: '0.125rem' }}>See the scam. Trace the threat.</div>
         <p style={{ fontSize: '0.8125rem', color: '#475569', lineHeight: 1.5, marginTop: '0.625rem' }}>
-          A community-powered platform to detect, report and stop scams in our neighbourhoods.
+          {t('aboutPlatform')}
         </p>
       </div>
     </div>

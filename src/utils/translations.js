@@ -2,37 +2,33 @@ export const translations = {
   en: {
     // Navigation
     home: "Home",
-    reportScam: "Report a Scam",
-    activeThreats: "Active Threats",
-    safetyGuide: "Safety Guide",
-    helpResources: "Help & Resources",
-
-    // Home Page
-    checkStaySafe: "Check. Stay Safe.",
-    stopScams: "Stop scams before you click.",
-    placeholder: "Paste a message, link, or upload a screenshot",
-    uploadImage: "Upload Image",
-    checkScam: "Check for Scam",
+    report: "Report",
+    threats: "Threats",
+    guide: "Guide",
+    help: "Help",
     
-    // Alerts
+    // Home Page
+    checkStaySafe: "Is this suspicious?",
+    stopScams: "Check a message, URL or screenshot before you click.",
+    placeholder: "Paste a message, link, or drop a screenshot here",
+    uploadImage: "Upload Image",
     recentAlerts: "Recent Alerts",
     viewAll: "View All →",
     scam: "SCAM",
     reports: "reports",
-    bankKYC: "Bank KYC Impersonation",
-    bankKYCDesc: "Fake bank messages asking for OTP and account verification links.",
-    courierRefund: "Courier Refund Scam",
-    courierRefundDesc: "Fake delivery links asking for payment.",
-    
-    // TN Police
     tnPoliceAwareness: "Tamil Nadu Police Awareness",
     learnHowToAvoid: "Learn how to avoid getting scammed",
     viewMore: "View More →",
     howToAvoid: "How to avoid getting scammed",
     tnPoliceDept: "Tamil Nadu Police, Government of Tamil Nadu",
+    bankKYC: "Bank KYC Impersonation",
+    bankKYCDesc: "Fake bank messages asking for OTP and account verification links.",
+    courierRefund: "Courier Refund Scam",
+    courierRefundDesc: "Fake delivery links asking for small customs fees.",
 
     // General
     loading: "Loading...",
+    
     // Result Page
     checkAnother: "Check another message",
     safe: "Safe",
@@ -57,41 +53,93 @@ export const translations = {
     goToHome: "Go to Home",
     analyzing: "Analyzing...",
     aiInspecting: "Our AI is inspecting the message for threats.",
+
+    // Report Page
+    reportTitle: "Report a scam",
+    reportDesc: "Help protect your neighbours. Takes under a minute.",
+    stepType: "Type",
+    stepDetails: "Details",
+    stepDone: "Done",
+    whatType: "What type of scam is this?",
+    pasteLabel: "Paste the message, link or number",
+    loseMoney: "Did you lose money?",
+    no: "No",
+    almost: "Almost",
+    yes: "Yes",
+    whereHappen: "Where did this happen?",
+    anonymous: "Your report is anonymous by default. This helps keep you and others safe.",
+    provideDetails: "Please provide some details.",
+    failSubmit: "Failed to submit report. Please try again.",
+    submitting: "Submitting...",
+    submitReport: "Submit report",
+    thanks: "Thank you for reporting!",
+    reportReceivedPart1: "Report ",
+    reportReceivedPart2: " received. Our analysts will review it and warn others in your area.",
+    call1930: "If you lost money, call 1930 immediately — the national cybercrime helpline.",
+    backHome: "Back to Home",
+    reportAnother: "Report another scam",
+
+    // Threats Page
+    activeThreats: "Active threats",
+    threatsDesc: "What's happening in South Chennai right now.",
+    all: "All",
+    noThreats: "No threats match this filter right now. 🎉",
+    reportSingular: "report",
+    reportsPlural: "reports",
+
+    // Guide Page
+    safetyGuide: "Safety guide",
+    spotScam: "Spot a scam in seconds.",
+    goldenRules: "Three golden rules",
+    rule1: "Never share your OTP",
+    rule2: "Don't click unknown links",
+    rule3: "Banks never ask for PIN or CVV",
+    learnScams: "Learn about common scams",
+    clickedOrPaid: "Already clicked or paid?",
+    call1930Btn: "Call 1930",
+    nationalHelpline: "National cybercrime helpline",
+
+    // Help Page
+    helpRes: "Help and resources",
+    whereToTurn: "Where to turn if you've been scammed.",
+    fileOnline: "File an online complaint",
+    officialGov: "Official government portal",
+    yourBank: "Your bank",
+    callNumber: "Call the number on your card",
+    reportBlock: "Report and block transactions",
+    commonQ: "Common questions",
+    aboutPlatform: "A community-powered platform to detect, report and stop scams in our neighbourhoods.",
   },
   ta: {
     // Navigation
     home: "முகப்பு",
-    reportScam: "புகார் செய்",
-    activeThreats: "அச்சுறுத்தல்கள்",
-    safetyGuide: "பாதுகாப்பு வழிகாட்டி",
-    helpResources: "உதவி",
-
-    // Home Page
-    checkStaySafe: "சரிபார்க்கவும். பாதுகாப்பாக இருங்கள்.",
-    stopScams: "கிளிக் செய்யும் முன் மோசடிகளைத் தவிர்க்கவும்.",
-    placeholder: "ஒரு செய்தி, இணைப்பு அல்லது ஸ்கிரீன்ஷாட்டை இங்கே ஒட்டவும்",
-    uploadImage: "படம் பதிவேற்று",
-    checkScam: "மோசடியை சரிபார்",
+    report: "புகார்",
+    threats: "அச்சுறுத்தல்கள்",
+    guide: "வழிகாட்டி",
+    help: "உதவி",
     
-    // Alerts
+    // Home Page
+    checkStaySafe: "இது சந்தேகத்திற்குரியதா?",
+    stopScams: "நீங்கள் கிளிக் செய்வதற்கு முன் செய்தி, URL அல்லது ஸ்கிரீன்ஷாட்டை சரிபார்க்கவும்.",
+    placeholder: "ஒரு செய்தி, இணைப்பு அல்லது ஸ்கிரீன்ஷாட்டை இங்கே ஒட்டவும்",
+    uploadImage: "படத்தை பதிவேற்று",
     recentAlerts: "சமீபத்திய எச்சரிக்கைகள்",
     viewAll: "அனைத்தையும் காண்க →",
     scam: "மோசடி",
     reports: "புகார்கள்",
-    bankKYC: "வங்கி KYC மோசடி",
-    bankKYCDesc: "OTP மற்றும் கணக்கு சரிபார்ப்பை கேட்கும் போலி வங்கி செய்திகள்.",
+    tnPoliceAwareness: "தமிழ்நாடு காவல்துறை விழிப்புணர்வு",
+    learnHowToAvoid: "மோசடியில் சிக்காமல் தடுப்பது எப்படி என்று தெரிந்து கொள்ளுங்கள்",
+    viewMore: "மேலும் காண்க →",
+    howToAvoid: "மோசடியில் சிக்காமல் தடுப்பது எப்படி",
+    tnPoliceDept: "தமிழ்நாடு காவல்துறை, தமிழ்நாடு அரசு",
+    bankKYC: "வங்கி KYC ஆள்மாறாட்டம்",
+    bankKYCDesc: "OTP மற்றும் கணக்கு சரிபார்ப்பு இணைப்புகளைக் கேட்கும் போலி வங்கி செய்திகள்.",
     courierRefund: "கூரியர் ரீஃபண்ட் மோசடி",
-    courierRefundDesc: "பணம் கேட்கும் போலி டெலிவரி இணைப்புகள்.",
-    
-    // TN Police
-    tnPoliceAwareness: "தமிழ்நாடு காவல் துறை விழிப்புணர்வு",
-    learnHowToAvoid: "மோசடிகளில் இருந்து எப்படி தப்பிப்பது என்று அறியுங்கள்",
-    viewMore: "மேலும் காண →",
-    howToAvoid: "மோசடிகளில் இருந்து எப்படி தப்பிப்பது",
-    tnPoliceDept: "தமிழ்நாடு காவல் துறை, தமிழ்நாடு அரசு",
+    courierRefundDesc: "சிறிய சுங்க கட்டணங்களை கேட்கும் போலி டெலிவரி இணைப்புகள்.",
 
     // General
     loading: "ஏற்றுகிறது...",
+    
     // Result Page
     checkAnother: "மற்றொரு செய்தியை சரிபார்க்கவும்",
     safe: "பாதுகாப்பானது",
@@ -116,5 +164,61 @@ export const translations = {
     goToHome: "முகப்பிற்கு செல்",
     analyzing: "பகுப்பாய்வு செய்கிறது...",
     aiInspecting: "எங்கள் AI அச்சுறுத்தல்களுக்கான செய்தியை ஆய்வு செய்கிறது.",
+
+    // Report Page
+    reportTitle: "மோசடியைப் புகாரளிக்கவும்",
+    reportDesc: "உங்கள் அக்கம்பக்கத்தினரைப் பாதுகாக்க உதவுங்கள். ஒரு நிமிடம் மட்டுமே ஆகும்.",
+    stepType: "வகை",
+    stepDetails: "விவரங்கள்",
+    stepDone: "முடிந்தது",
+    whatType: "இது எந்த வகையான மோசடி?",
+    pasteLabel: "செய்தி, இணைப்பு அல்லது எண்ணை ஒட்டவும்",
+    loseMoney: "நீங்கள் பணத்தை இழந்தீர்களா?",
+    no: "இல்லை",
+    almost: "கிட்டத்தட்ட",
+    yes: "ஆம்",
+    whereHappen: "இது எங்கே நடந்தது?",
+    anonymous: "உங்கள் புகார் இயல்பாகவே அநாமதேயமானது. இது உங்களையும் மற்றவர்களையும் பாதுகாப்பாக வைக்க உதவுகிறது.",
+    provideDetails: "தயவுசெய்து சில விவரங்களை வழங்கவும்.",
+    failSubmit: "புகாரைச் சமர்ப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+    submitting: "சமர்ப்பிக்கிறது...",
+    submitReport: "புகாரைச் சமர்ப்பி",
+    thanks: "புகாரளித்ததற்கு நன்றி!",
+    reportReceivedPart1: "புகார் ",
+    reportReceivedPart2: " பெறப்பட்டது. எங்கள் நிபுணர்கள் அதை மதிப்பாய்வு செய்து உங்கள் பகுதியில் உள்ள மற்றவர்களை எச்சரிப்பார்கள்.",
+    call1930: "நீங்கள் பணத்தை இழந்திருந்தால், உடனடியாக 1930 என்ற தேசிய சைபர் கிரைம் உதவி எண்ணை அழைக்கவும்.",
+    backHome: "முகப்பிற்குத் திரும்பு",
+    reportAnother: "மற்றொரு மோசடியைப் புகாரளி",
+
+    // Threats Page
+    activeThreats: "தற்போதைய அச்சுறுத்தல்கள்",
+    threatsDesc: "தென் சென்னையில் இப்போது என்ன நடக்கிறது.",
+    all: "அனைத்தும்",
+    noThreats: "இந்த வடிகட்டலுக்கு எந்த அச்சுறுத்தல்களும் பொருந்தவில்லை. 🎉",
+    reportSingular: "புகார்",
+    reportsPlural: "புகார்கள்",
+
+    // Guide Page
+    safetyGuide: "பாதுகாப்பு வழிகாட்டி",
+    spotScam: "மோசடியை நொடிகளில் கண்டறியவும்.",
+    goldenRules: "மூன்று தங்க விதிகள்",
+    rule1: "உங்கள் OTP ஐ ஒருபோதும் பகிர வேண்டாம்",
+    rule2: "தெரியாத இணைப்புகளைக் கிளிக் செய்ய வேண்டாம்",
+    rule3: "வங்கிகள் ஒருபோதும் PIN அல்லது CVV ஐக் கேட்காது",
+    learnScams: "பொதுவான மோசடிகளைப் பற்றி அறிக",
+    clickedOrPaid: "ஏற்கனவே கிளிக் செய்துவிட்டீர்களா அல்லது பணம் செலுத்திவிட்டீர்களா?",
+    call1930Btn: "1930 ஐ அழைக்கவும்",
+    nationalHelpline: "தேசிய சைபர் கிரைம் உதவி எண்",
+
+    // Help Page
+    helpRes: "உதவி மற்றும் வளங்கள்",
+    whereToTurn: "நீங்கள் ஏமாற்றப்பட்டால் எங்கு செல்ல வேண்டும்.",
+    fileOnline: "ஆன்லைன் புகார் தாக்கல் செய்யவும்",
+    officialGov: "அதிகாரப்பூர்வ அரசு போர்டல்",
+    yourBank: "உங்கள் வங்கி",
+    callNumber: "உங்கள் அட்டையில் உள்ள எண்ணை அழைக்கவும்",
+    reportBlock: "பரிவர்த்தனைகளைப் புகாரளித்து தடுக்கவும்",
+    commonQ: "பொதுவான கேள்விகள்",
+    aboutPlatform: "நமது சுற்றுப்புறங்களில் நடக்கும் மோசடிகளைக் கண்டறிய, புகாரளிக்க மற்றும் தடுக்க உதவும் சமூக ஆதரவு தளம்.",
   }
 };

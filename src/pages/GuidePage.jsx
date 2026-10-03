@@ -16,33 +16,36 @@ const SCAM_TYPES = [
   { title: 'Electricity bill scams', desc: 'Fake bill links and disconnections', icon: Zap, color: '#DC2626', bg: '#FEF2F2' },
 ];
 
+import { useLanguage } from '../context/LanguageContext';
+
 export default function GuidePage() {
+  const { t } = useLanguage();
   return (
     <div style={{ padding: '1rem', paddingBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '32rem', margin: '0 auto', width: '100%' }}>
       <div>
-        <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>Safety guide</h1>
-        <p style={{ color: '#475569', fontSize: '0.875rem', marginTop: '0.25rem' }}>Spot a scam in seconds.</p>
+        <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>{t('safetyGuide')}</h1>
+        <p style={{ color: '#475569', fontSize: '0.875rem', marginTop: '0.25rem' }}>{t('spotScam')}</p>
       </div>
 
       {/* Three golden rules */}
       <div style={{ background: '#FFFBEB', border: '1px solid #FDE68A', borderRadius: '0.875rem', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <span style={{ fontSize: '1.125rem' }}>💡</span>
-          <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1rem', color: '#92400E' }}>Three golden rules</h2>
+          <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1rem', color: '#92400E' }}>{t('goldenRules')}</h2>
         </div>
         {GOLDEN_RULES.map((rule) => (
           <div key={rule.text} style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
             <div style={{ width: '2rem', height: '2rem', borderRadius: '50%', background: rule.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <rule.icon size={16} color={rule.color} strokeWidth={2.5} />
             </div>
-            <span style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a' }}>{rule.text}</span>
+            <span style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a' }}>{t(rule.text) || rule.text}</span>
           </div>
         ))}
       </div>
 
       {/* Learn about common scams */}
       <div style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.875rem', padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.25rem', boxShadow: '0 1px 3px rgba(16,24,40,0.05)' }}>
-        <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1rem', color: '#0f172a', marginBottom: '0.5rem' }}>Learn about common scams</h2>
+        <h2 style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1rem', color: '#0f172a', marginBottom: '0.5rem' }}>{t('learnScams')}</h2>
         {SCAM_TYPES.map((s) => (
           <button
             key={s.title}
@@ -69,9 +72,9 @@ export default function GuidePage() {
           <PhoneCall size={22} color="#DC2626" strokeWidth={2.25} />
         </div>
         <div>
-          <div style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1rem', color: '#DC2626' }}>Already clicked or paid?</div>
-          <div style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '1.0625rem', color: '#B91C1C', marginTop: '0.125rem' }}>Call 1930</div>
-          <div style={{ fontSize: '0.8125rem', color: '#B91C1C' }}>National cybercrime helpline</div>
+          <div style={{ fontFamily: 'var(--font-head)', fontWeight: '800', fontSize: '1rem', color: '#DC2626' }}>{t('clickedOrPaid')}</div>
+          <div style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '1.0625rem', color: '#B91C1C', marginTop: '0.125rem' }}>{t('call1930Btn')}</div>
+          <div style={{ fontSize: '0.8125rem', color: '#B91C1C' }}>{t('nationalHelpline')}</div>
         </div>
       </a>
     </div>

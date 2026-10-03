@@ -10,8 +10,11 @@ const AREAS = [
   'Medavakkam', 'Tharamani', 'Pallavaram', 'Tambaram',
 ];
 
+import { useLanguage } from '../context/LanguageContext';
+
 function Stepper({ step, onStepClick }) {
-  const steps = ['Type', 'Details', 'Done'];
+  const { t } = useLanguage();
+  const steps = [t('stepType'), t('stepDetails'), t('stepDone')];
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start', padding: '0.25rem 0.5rem 0' }}>
       {steps.map((label, i) => {
@@ -46,6 +49,7 @@ function Stepper({ step, onStepClick }) {
 
 export default function ReportPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [step, setStep] = useState(1);
   const [type, setType] = useState(null);
   const [message, setMessage] = useState('');
@@ -58,7 +62,7 @@ export default function ReportPage() {
 
   const submit = async () => {
     if (!message || message.trim() === '') {
-      setErrorMsg("Please provide some details.");
+      setErrorMsg(t('provideDetails'));
       return;
     }
     
@@ -93,7 +97,7 @@ export default function ReportPage() {
       setStep(3);
     } catch (e) {
       console.error(e);
-      setErrorMsg("Failed to submit report. Please try again.");
+      setErrorMsg(t('failSubmit'));
     } finally {
       setIsSubmitting(false);
     }
@@ -113,7 +117,7 @@ export default function ReportPage() {
         <button onClick={() => (step === 1 ? navigate(-1) : setStep(step - 1))} style={{ background: 'none', border: 'none', padding: '0.25rem', cursor: 'pointer', display: 'flex' }} aria-label="Back">
           <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#1e293b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6" /></svg>
         </button>
-        <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.125rem', fontWeight: '800', color: '#0f172a' }}>Report a scam</h1>
+        <h1 style={{ fontFamily: 'var(--font-head)', fontSize: '1.125rem', fontWeight: '800', color: '#0f172a' }}>{t('reportTitle')}</h1>
       </div>
 
       <Stepper step={step} onStepClick={(n) => n < step && setStep(n)} />
@@ -121,12 +125,12 @@ export default function ReportPage() {
       {step === 1 && (
         <>
           <div>
-            <h2 style={{ fontFamily: 'var(--font-head)', fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>Report a scam</h2>
-            <p style={{ color: '#475569', fontSize: '0.875rem', marginTop: '0.25rem' }}>Help protect your neighbours. Takes under a minute.</p>
+            <h2 style={{ fontFamily: 'var(--font-head)', fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>{t('reportTitle')}</h2>
+            <p style={{ color: '#475569', fontSize: '0.875rem', marginTop: '0.25rem' }}>{t('reportDesc')}</p>
           </div>
 
           <div>
-            <h3 style={sectionTitle}>What type of scam is this?</h3>
+            <h3 style={sectionTitle}>{t('whatType')}</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.625rem' }}>
               {reportTiles.map((tile) => {
                 const selected = type === tile.id;
@@ -141,7 +145,7 @@ export default function ReportPage() {
                     }}
                   >
                     <img src={tile.iconUrl} alt="" style={{ width: '2.375rem', height: '2.375rem', objectFit: 'contain' }} />
-                    <span style={{ fontFamily: 'var(--font-head)', fontWeight: '600', fontSize: '0.75rem', color: '#0f172a', textAlign: 'center', lineHeight: 1.25 }}>{tile.label}</span>
+                    <span style={{ fontFamily: 'var(--font-head)', fontWeight: '600', fontSize: '0.75rem', color: '#0f172a', textAlign: 'center', lineHeight: 1.25 }}>{t(tile.id) || tile.label}</span>
                   </button>
                 );
               })}
@@ -153,12 +157,12 @@ export default function ReportPage() {
       {step === 2 && (
         <>
           <div>
-            <h2 style={{ fontFamily: 'var(--font-head)', fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>Report a scam</h2>
-            <p style={{ color: '#475569', fontSize: '0.875rem', marginTop: '0.25rem' }}>Help protect your neighbours. Takes under a minute.</p>
+            <h2 style={{ fontFamily: 'var(--font-head)', fontSize: '1.5rem', fontWeight: '800', color: '#0f172a' }}>{t('reportTitle')}</h2>
+            <p style={{ color: '#475569', fontSize: '0.875rem', marginTop: '0.25rem' }}>{t('reportDesc')}</p>
           </div>
 
           <div>
-            <h3 style={sectionTitle}>Paste the message, link or number</h3>
+            <h3 style={sectionTitle}>{t('pasteLabel')}</h3>
             <div style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.75rem', padding: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
               <textarea
                 value={message}
@@ -176,16 +180,16 @@ export default function ReportPage() {
           </div>
 
           <div>
-            <h3 style={sectionTitle}>Did you lose money?</h3>
+            <h3 style={sectionTitle}>{t('loseMoney')}</h3>
             <div style={{ display: 'flex', gap: '0.5rem' }}>
-              {['No', 'Almost', 'Yes'].map((opt) => (
-                <button key={opt} onClick={() => setLostMoney(opt)} style={chip(lostMoney === opt)}>{opt}</button>
+              {['no', 'almost', 'yes'].map((optKey) => (
+                <button key={optKey} onClick={() => setLostMoney(optKey)} style={chip(lostMoney === optKey)}>{t(optKey)}</button>
               ))}
             </div>
           </div>
 
           <div>
-            <h3 style={sectionTitle}>Where did this happen?</h3>
+            <h3 style={sectionTitle}>{t('whereHappen')}</h3>
             <div style={{ position: 'relative' }}>
               <select
                 value={area}
@@ -201,9 +205,7 @@ export default function ReportPage() {
 
           <div style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '0.625rem', padding: '0.75rem', display: 'flex', gap: '0.625rem', alignItems: 'center' }}>
             <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2" style={{ flexShrink: 0 }}><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
-            <p style={{ fontSize: '0.8125rem', color: '#166534', lineHeight: 1.4 }}>
-              Your report is <strong>anonymous by default</strong>. This helps keep you and others safe.
-            </p>
+            <p style={{ fontSize: '0.8125rem', color: '#166534', lineHeight: 1.4 }} dangerouslySetInnerHTML={{ __html: t('anonymous') }} />
           </div>
           
           {errorMsg && (
@@ -225,11 +227,11 @@ export default function ReportPage() {
             }}
           >
             {isSubmitting ? (
-               <span>Submitting...</span>
+               <span>{t('submitting')}</span>
             ) : (
               <>
                 <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /></svg>
-                Submit report
+                {t('submitReport')}
               </>
             )}
           </button>
@@ -241,25 +243,23 @@ export default function ReportPage() {
           <div style={{ width: '4.5rem', height: '4.5rem', borderRadius: '50%', background: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <svg width="2.25rem" height="2.25rem" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
           </div>
-          <h2 style={{ fontFamily: 'var(--font-head)', fontSize: '1.375rem', fontWeight: '800', color: '#0f172a' }}>Thank you for reporting!</h2>
+          <h2 style={{ fontFamily: 'var(--font-head)', fontSize: '1.375rem', fontWeight: '800', color: '#0f172a' }}>{t('thanks')}</h2>
           <p style={{ color: '#475569', fontSize: '0.875rem', lineHeight: 1.5 }}>
-            Report <strong style={{ color: '#2563EB' }}>{reportId}</strong> received. Our analysts will review it and warn others in your area.
+            {t('reportReceivedPart1')}<strong style={{ color: '#2563EB' }}>{reportId}</strong>{t('reportReceivedPart2')}
           </p>
-          <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '0.625rem', padding: '0.75rem 1rem', fontSize: '0.8125rem', color: '#1e40af', marginTop: '0.25rem' }}>
-            If you lost money, call <strong>1930</strong> immediately — the national cybercrime helpline.
-          </div>
+          <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '0.625rem', padding: '0.75rem 1rem', fontSize: '0.8125rem', color: '#1e40af', marginTop: '0.25rem' }} dangerouslySetInnerHTML={{ __html: t('call1930') }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', width: '100%', marginTop: '0.75rem' }}>
             <button
               onClick={() => navigate('/')}
               style={{ width: '100%', padding: '0.875rem', borderRadius: '2rem', border: 'none', background: 'linear-gradient(90deg, #1D6FF2 0%, #7C5CF5 100%)', color: '#fff', fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', cursor: 'pointer' }}
             >
-              Back to Home
+              {t('backHome')}
             </button>
             <button
               onClick={() => { setType(null); setMessage(''); setLostMoney(null); setReportId(null); setStep(1); }}
               style={{ width: '100%', padding: '0.875rem', borderRadius: '2rem', border: '1px solid #E6EAF2', background: '#fff', color: '#334155', fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', cursor: 'pointer' }}
             >
-              Report another scam
+              {t('reportAnother')}
             </button>
           </div>
         </div>
