@@ -29,6 +29,25 @@ export const VERDICT_META = {
   },
 };
 
+async function extractTextFromImage(model, imageBase64) {
+  const match = imageBase64.match(/^data:(.*?);base64,(.*)$/);
+  if (!match) return "";
+  
+  try {
+    const contents = [
+      "Extract all text and URLs from this image exactly as they appear. Do not analyze, just transcribe.",
+      { inlineData: { mimeType: match[1], data: match[2] } }
+    ];
+    // Create a temporary model specifically for plain text extraction
+    const ocrModel = model.getGenerativeModel({ model: 'gemini-3.5-flash-lite' });
+    const result = await ocrModel.generateContent(contents);
+    return result.response.text();
+  } catch (e) {
+    console.warn("OCR Pre-pass failed", e);
+    return "";
+  }
+}
+
 export async function analyzeWithGemini(text, imageBase64 = null) {
   const apiKey = localStorage.getItem('MEYVIZHI_GEMINI_API_KEY') || import.meta.env.VITE_GEMINI_API_KEY;
   if (!apiKey) {
@@ -36,6 +55,17 @@ export async function analyzeWithGemini(text, imageBase64 = null) {
   }
   
   const genAI = new GoogleGenerativeAI(apiKey);
+  
+  let combinedText = text || "";
+  
+  // OCR PASS
+  if (imageBase64) {
+    const imageText = await extractTextFromImage(genAI, imageBase64);
+    if (imageText) {
+      combinedText += "\n" + imageText;
+    }
+  }
+
   const model = genAI.getGenerativeModel({ 
     model: 'gemini-3.5-flash-lite',
     generationConfig: {
@@ -44,7 +74,7 @@ export async function analyzeWithGemini(text, imageBase64 = null) {
     }
   });
 
-  const domainIntelligence = buildDomainIntelligence(text);
+  const domainIntelligence = buildDomainIntelligence(combinedText);
   
   const prompt = `You are MEYVIZHI's scam detection AI.
 
@@ -56,7 +86,7 @@ Then identify scam indicators.
 ${INDIAN_SCAM_PATTERNS}
 
 DOMAIN INTELLIGENCE CONTEXT:
-The following structured intelligence was extracted from the URLs in the message:
+The following structured intelligence was extracted from the URLs in the message (and OCR'd from the image if provided):
 ${JSON.stringify(domainIntelligence, null, 2)}
 
 IMPORTANT RULES:
@@ -107,8 +137,8 @@ Output exactly this JSON structure:
   "recommended_action": ""
 }
 
-Message to analyze:
-"${text || "No text provided (inspect image)"}"
+Message to analyze (including extracted OCR text if any):
+"${combinedText || "No text provided (inspect image)"}"
 `;
 
   try {
