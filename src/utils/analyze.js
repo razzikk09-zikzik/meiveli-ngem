@@ -38,6 +38,7 @@ const BRANDS = [
 
 const GOOD_TLDS = ['.gov.in', '.gov', '.edu'];
 const RISKY_TLDS = ['.xyz', '.top', '.club', '.online', '.site', '.info', '.buzz', '.icu', '.live', '.shop', '.store', '.link'];
+const TUNNEL_DOMAINS = ['trycloudflare.com', 'ngrok.io', 'ngrok-free.app', 'loca.lt', 'serveo.net', 'localhost.run', 'lhr.life', 'pagekite.me'];
 
 function hasAny(words, text) {
   return words.filter((w) => text.includes(w));
@@ -91,6 +92,17 @@ export function analyzeLocally(rawText) {
       key: 'domain',
       title: 'Unknown / suspicious link',
       detail: 'Domain uses a TLD commonly seen in phishing campaigns',
+    });
+  }
+
+  // Developer tunnel tools used in phishing (e.g. trycloudflare, ngrok)
+  const tunnelLink = urls.find((u) => TUNNEL_DOMAINS.some((td) => u.toLowerCase().includes(td)));
+  if (tunnelLink && !foundBadLink) {
+    score += 85;
+    signals.push({
+      key: 'domain',
+      title: 'Phishing Tunnel Detected',
+      detail: 'Uses a developer tunnel (e.g., Cloudflare, Ngrok) heavily abused for phishing.',
     });
   }
 
@@ -206,6 +218,7 @@ export async function analyzeWithGemini(text, imageBase64 = null) {
   });
   
   const foundBadTerm = KNOWN_BAD_TERMS.find(term => tLower.includes(term));
+  const tunnelLink = urls.find((u) => TUNNEL_DOMAINS.some((td) => u.toLowerCase().includes(td)));
 
   if (foundBadLink) {
     return {
@@ -215,6 +228,20 @@ export async function analyzeWithGemini(text, imageBase64 = null) {
         key: 'domain',
         title: 'Known malicious link',
         detail: `This link is present in a database of known scams (${foundBadLink}).`
+      }],
+      urls,
+      similarReports: 'Seen in multiple reports from your area',
+    };
+  }
+
+  if (tunnelLink) {
+    return {
+      score: 95,
+      verdict: 'scam',
+      signals: [{
+        key: 'domain',
+        title: 'Phishing Tunnel Detected',
+        detail: `Uses a developer tunnel (${tunnelLink}) heavily abused for phishing.`
       }],
       urls,
       similarReports: 'Seen in multiple reports from your area',
