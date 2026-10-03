@@ -3,14 +3,14 @@ import { MapContainer, TileLayer, Marker, Tooltip, useMap, Popup } from 'react-l
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-function MapController({ hotspots, selectedArea }) {
+function MapController({ hotspots, selectedArea, mode }) {
   const map = useMap();
 
   useEffect(() => {
     // Handle bounds when hotspots change
     if (hotspots.length > 0) {
       const bounds = L.latLngBounds(hotspots.map(h => [h.lat, h.lng]));
-      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: mode === 'mobile-threats' ? 12 : 13 });
     } else {
       // If no markers, center on South Chennai
       map.setView([12.97, 80.23], 11);
@@ -42,7 +42,7 @@ function MapController({ hotspots, selectedArea }) {
       }
       resizeObserver.disconnect();
     };
-  }, [map, hotspots]);
+  }, [map, hotspots, mode]);
 
   return null;
 }
@@ -52,6 +52,10 @@ export default function ThreatMap({ hotspots = [], selectedArea = 'All', onSelec
   const filteredHotspots = selectedArea === 'All' || selectedArea === 'All South Chennai'
     ? hotspots 
     : hotspots.filter(h => h.name === selectedArea);
+
+  const top3Names = mode === 'mobile-threats' 
+    ? [...hotspots].sort((a,b) => b.reports - a.reports).slice(0, 3).map(h => h.name) 
+    : [];
 
   return (
     <div style={{ position: 'relative', width: '100%', height, borderRadius: mode === 'citizen' ? '0.5rem' : '0', overflow: 'hidden' }}>
@@ -66,7 +70,7 @@ export default function ThreatMap({ hotspots = [], selectedArea = 'All', onSelec
         <TileLayer 
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" 
         />
-        <MapController hotspots={filteredHotspots} selectedArea={selectedArea} />
+        <MapController hotspots={filteredHotspots} selectedArea={selectedArea} mode={mode} />
 
         {filteredHotspots.map(spot => {
           // Heat effect without a new library (scaling halo based on count)
@@ -122,11 +126,17 @@ export default function ThreatMap({ hotspots = [], selectedArea = 'All', onSelec
                 justify-content: center;
                 box-shadow: 0 0 0 2px white;
               ">
-                ${spot.reports > 0 ? `
+                ${(spot.reports > 0 && mode !== 'mobile-threats') ? `
                   <span style="color: white; font-size: ${size > 30 ? '0.75rem' : '0.625rem'}; font-weight: 700; font-family: var(--font-head); z-index: 2">
                     ${spot.reports}
                   </span>
-                ` : `<div style="width: 8px; height: 8px; background: white; border-radius: 50%;"></div>`}
+                ` : `<div style="width: 8px; height: 8px; background: white; border-radius: 50%; z-index: 2"></div>`}
+                
+                ${(mode === 'mobile-threats' && top3Names.includes(spot.name)) ? `
+                  <div style="position: absolute; top: ${size + 8}px; left: 50%; transform: translateX(-50%); background: white; padding: 2px 6px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.15); white-space: nowrap; font-size: 0.65rem; font-weight: 700; color: #1e293b; border: 1px solid #e2e8f0;">
+                    ${spot.name} · ${spot.reports}
+                  </div>
+                ` : ''}
                 
                 <div style="
                   position: absolute;
@@ -191,12 +201,12 @@ export default function ThreatMap({ hotspots = [], selectedArea = 'All', onSelec
       </MapContainer>
 
       {/* Legend */}
-      {mode === 'citizen' && (
+      {(mode === 'citizen' || mode === 'mobile-threats') && (
         <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', background: 'white', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', zIndex: 1000 }}>
-           <div style={{ width: '120px', height: '8px', background: 'linear-gradient(to right, #3B82F6, #F59E0B, #EF4444)', borderRadius: '4px', marginBottom: '0.25rem' }}></div>
+           <div style={{ width: '120px', height: '8px', background: 'linear-gradient(to right, #3B82F6, #F59E0B, #EF4444)', borderRadius: '4px', marginBottom: '0.375rem' }}></div>
            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: '#64748B', fontWeight: '600' }}>
-             <span>Low Reports</span>
-             <span>High Reports</span>
+             <span>Low</span>
+             <span>High</span>
            </div>
         </div>
       )}
