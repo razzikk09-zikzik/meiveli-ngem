@@ -113,21 +113,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* 3. Language & Area Chips */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.8125rem', color: '#64748b', fontWeight: 600 }}>Language:</span>
-          <button onClick={() => setLanguage('en')} style={{ padding: '0.25rem 0.75rem', borderRadius: '1rem', border: 'none', background: language === 'en' ? '#2563EB' : '#E2E8F0', color: language === 'en' ? '#fff' : '#475569', fontSize: '0.8125rem', fontWeight: 600 }}>English</button>
-          <button onClick={() => setLanguage('ta')} style={{ padding: '0.25rem 0.75rem', borderRadius: '1rem', border: 'none', background: language === 'ta' ? '#2563EB' : '#E2E8F0', color: language === 'ta' ? '#fff' : '#475569', fontSize: '0.8125rem', fontWeight: 600 }}>தமிழ்</button>
-          <button onClick={() => setLanguage('tg')} style={{ padding: '0.25rem 0.75rem', borderRadius: '1rem', border: 'none', background: language === 'tg' ? '#2563EB' : '#E2E8F0', color: language === 'tg' ? '#fff' : '#475569', fontSize: '0.8125rem', fontWeight: 600 }}>Tanglish</button>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontSize: '0.8125rem', color: '#64748b', fontWeight: 600 }}>Area:</span>
-          <select value={area} onChange={e => setArea(e.target.value)} style={{ padding: '0.25rem 0.75rem', borderRadius: '1rem', border: '1px solid #E2E8F0', background: '#F8FAFC', fontSize: '0.8125rem', fontWeight: 600, outline: 'none' }}>
-            {Object.keys(hotspots.length ? hotspots.reduce((acc,h)=>({...acc,[h.name]:1}),{}) : {'Velachery':1,'Sholinganallur':1,'Adyar':1,'Perungudi':1,'Medavakkam':1,'Tharamani':1}).map(a => <option key={a} value={a}>{a}</option>)}
-          </select>
-        </div>
-      </div>
+      {/* 3. Removed Language & Area Chips per user request */}
 
       {/* 4. Check Now Button */}
       <button
