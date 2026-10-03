@@ -71,7 +71,17 @@ export default function HomePage() {
     overflow: 'hidden',
   };
 
-  const renderMobile = () => (
+  const alertThemes = [
+    { cardBg: '#FEF2F2', cardBorder: '#FECACA', iconBg: '#FEE2E2', iconColor: '#DC2626', badgeBg: '#FEE2E2', badgeColor: '#DC2626' },
+    { cardBg: '#EFF6FF', cardBorder: '#BFDBFE', iconBg: '#E0E7FF', iconColor: '#4F46E5', badgeBg: '#E0E7FF', badgeColor: '#4F46E5' },
+    { cardBg: '#F0FDF4', cardBorder: '#BBF7D0', iconBg: '#DCFCE7', iconColor: '#16A34A', badgeBg: '#DCFCE7', badgeColor: '#16A34A' },
+    { cardBg: '#FFF9F0', cardBorder: '#FEF08A', iconBg: '#FEF3C7', iconColor: '#D97706', badgeBg: '#FEF3C7', badgeColor: '#D97706' },
+  ];
+
+  const renderMobile = () => {
+    const currentTheme = alertThemes[alertIndex % alertThemes.length];
+    
+    return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
       {/* 1. Heading */}
       <div style={{ padding: '0.5rem 0' }}>
@@ -143,85 +153,85 @@ export default function HomePage() {
 
 
       {/* 6. Recent Alerts Card */}
-      <div style={{ ...cardStyle, marginTop: '0.5rem' }}>
+      <div style={{ ...cardStyle, marginTop: '0.25rem' }}>
         <div style={{ padding: '0.375rem 0.625rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
             <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="#EA580C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-            <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.9375rem', color: '#0f172a' }}>Recent Alerts</h2>
+            <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.875rem', color: '#0f172a' }}>Recent Alerts</h2>
           </div>
           <button onClick={() => navigate('/threats')} style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 600, background: 'none', border: 'none' }}>View All →</button>
         </div>
         
         {/* Carousel Content */}
-        <div style={{ position: 'relative', background: '#FFF9F0', padding: '0.5rem', margin: '0 0.5rem 0.5rem', borderRadius: '0.5rem', border: '1px solid #FEF08A' }}>
+        <div style={{ position: 'relative', background: currentTheme.cardBg, padding: '0.375rem 0.5rem', margin: '0 0.375rem 0.375rem', borderRadius: '0.5rem', border: `1px solid ${currentTheme.cardBorder}`, transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
           {/* Navigation Arrows */}
           <button 
             onClick={() => setAlertIndex(prev => prev === 0 ? 3 : prev - 1)}
-            style={{ position: 'absolute', left: '0.25rem', top: '45%', transform: 'translateY(-50%)', width: '1.5rem', height: '1.5rem', borderRadius: '50%', background: '#fff', border: '1px solid #E6EAF2', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}
+            style={{ position: 'absolute', left: '0.125rem', top: '45%', transform: 'translateY(-50%)', width: '1.25rem', height: '1.25rem', borderRadius: '50%', background: '#fff', border: '1px solid #E6EAF2', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}
           >
-            <svg width="0.875rem" height="0.875rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <svg width="0.75rem" height="0.75rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
           </button>
           <button 
             onClick={() => setAlertIndex(prev => prev === 3 ? 0 : prev + 1)}
-            style={{ position: 'absolute', right: '0.25rem', top: '45%', transform: 'translateY(-50%)', width: '1.5rem', height: '1.5rem', borderRadius: '50%', background: '#fff', border: '1px solid #E6EAF2', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}
+            style={{ position: 'absolute', right: '0.125rem', top: '45%', transform: 'translateY(-50%)', width: '1.25rem', height: '1.25rem', borderRadius: '50%', background: '#fff', border: '1px solid #E6EAF2', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}
           >
-            <svg width="0.875rem" height="0.875rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+            <svg width="0.75rem" height="0.75rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
           </button>
 
           {/* Slide Content */}
-          <div style={{ padding: '0 1rem', overflow: 'hidden' }}>
-            <div key={alertIndex} className="animate-slide-right" style={{ display: 'flex', gap: '0.5rem' }}>
-              <div style={{ width: '2rem', height: '2rem', borderRadius: '0.375rem', background: '#FEE2E2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+          <div style={{ padding: '0 0.875rem', overflow: 'hidden' }}>
+            <div key={alertIndex} className="animate-slide-right" style={{ display: 'flex', gap: '0.375rem' }}>
+              <div style={{ width: '1.75rem', height: '1.75rem', borderRadius: '0.375rem', background: currentTheme.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 {alertIndex % 2 === 0 ? (
-                  <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="10" width="16" height="10" rx="2" ry="2"/><path d="M12 14v4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                  <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke={currentTheme.iconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="10" width="16" height="10" rx="2" ry="2"/><path d="M12 14v4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
                 ) : (
-                  <svg width="1.125rem" height="1.125rem" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke={currentTheme.iconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
                 )}
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.125rem' }}>
-                  <span style={{ color: '#DC2626', fontSize: '0.5625rem', fontWeight: 800, background: '#FEE2E2', padding: '0.125rem 0.3125rem', borderRadius: '1rem', textTransform: 'uppercase' }}>SCAM</span>
-                  <span style={{ fontSize: '0.625rem', color: '#DC2626', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 600 }}>
+                  <span style={{ color: currentTheme.badgeColor, fontSize: '0.5rem', fontWeight: 800, background: currentTheme.badgeBg, padding: '0.125rem 0.25rem', borderRadius: '1rem', textTransform: 'uppercase' }}>SCAM</span>
+                  <span style={{ fontSize: '0.5625rem', color: '#DC2626', display: 'flex', alignItems: 'center', gap: '0.125rem', fontWeight: 600 }}>
                     <svg width="0.6875rem" height="0.6875rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
                     14 reports
                   </span>
                 </div>
-                <div style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.875rem', color: '#0f172a', lineHeight: 1.2, marginBottom: '0.125rem' }}>{alertIndex % 2 === 0 ? "Bank KYC Impersonation" : "Courier Refund Scam"}</div>
-                <div style={{ fontSize: '0.6875rem', color: '#475569', lineHeight: 1.3, marginBottom: '0.375rem' }}>Fake bank messages asking for OTP and account verification links.</div>
+                <div style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.8125rem', color: '#0f172a', lineHeight: 1.1, marginBottom: '0.125rem' }}>{alertIndex % 2 === 0 ? "Bank KYC Impersonation" : "Courier Refund Scam"}</div>
+                <div style={{ fontSize: '0.625rem', color: '#475569', lineHeight: 1.2, marginBottom: '0.25rem' }}>Fake bank messages asking for OTP and account verification links.</div>
                 
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#64748b', fontSize: '0.625rem' }}>
-                    <svg width="0.6875rem" height="0.6875rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.125rem', color: '#64748b', fontSize: '0.5625rem' }}>
+                    <svg width="0.5625rem" height="0.5625rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                     Velachery · 2 hours ago
                   </div>
-                  <div style={{ fontSize: '0.6875rem', color: '#64748b', fontWeight: 600 }}>{alertIndex + 1} / 4</div>
+                  <div style={{ fontSize: '0.5625rem', color: '#64748b', fontWeight: 600 }}>{alertIndex + 1} / 4</div>
                 </div>
               </div>
             </div>
           </div>
           
           {/* Dots */}
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.25rem', marginTop: '0.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.1875rem', marginTop: '0.375rem' }}>
             {[0, 1, 2, 3].map(i => (
-              <div key={i} style={{ width: '0.375rem', height: '0.375rem', borderRadius: '50%', background: i === alertIndex ? '#3B82F6' : '#CBD5E1' }} />
+              <div key={i} style={{ width: '0.25rem', height: '0.25rem', borderRadius: '50%', background: i === alertIndex ? '#3B82F6' : '#CBD5E1' }} />
             ))}
           </div>
         </div>
       </div>
 
       {/* 7. Tamil Nadu Police Awareness Video Card */}
-      <div style={{ ...cardStyle, marginTop: '0.5rem' }}>
-        <div style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-            <div style={{ width: '2rem', height: '2rem', borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ ...cardStyle, marginTop: '0.375rem' }}>
+        <div style={{ padding: '0.625rem 0.75rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div style={{ width: '1.75rem', height: '1.75rem', borderRadius: '50%', overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <img src="/assets/TNPOLICELOGO.png" alt="TN Police Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
             </div>
             <div>
-              <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '1rem', color: '#0f172a' }}>Tamil Nadu Police Awareness</h2>
-              <p style={{ fontSize: '0.75rem', color: '#64748b' }}>Learn how to avoid getting scammed</p>
+              <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.9375rem', color: '#0f172a' }}>Tamil Nadu Police Awareness</h2>
+              <p style={{ fontSize: '0.6875rem', color: '#475569' }}>Learn how to avoid getting scammed</p>
             </div>
           </div>
-          <button onClick={() => navigate('/guide')} style={{ fontSize: '0.8125rem', color: '#2563EB', fontWeight: 600, background: 'none', border: 'none' }}>View More →</button>
+          <button onClick={() => navigate('/guide')} style={{ fontSize: '0.75rem', color: '#2563EB', fontWeight: 600, background: 'none', border: 'none' }}>View More →</button>
         </div>
         
         <div style={{ padding: '0 1rem 1rem' }}>
@@ -247,6 +257,7 @@ export default function HomePage() {
       </div>
     </div>
   );
+  };
 
   const renderDesktop = () => (
     <div style={{ display: 'contents' }}>
