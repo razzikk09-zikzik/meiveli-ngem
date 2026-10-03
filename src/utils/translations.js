@@ -129,6 +129,25 @@ export const translations = {
     reportBlock: "Report and block transactions",
     commonQ: "Common questions",
     aboutPlatform: "A community-powered platform to detect, report and stop scams in our neighbourhoods.",
+    
+    // Help Page Exact Strings
+    "Call 1930": "Call 1930",
+    "cybercrime.gov.in": "cybercrime.gov.in",
+    "Your bank": "Your bank",
+    "National cybercrime helpline": "National cybercrime helpline",
+    "File an online complaint": "File an online complaint",
+    "Call the number on your card": "Call the number on your card",
+    "Available 24×7": "Available 24×7",
+    "Official government portal": "Official government portal",
+    "Report and block transactions": "Report and block transactions",
+    "What should I do if I clicked a link?": "What should I do if I clicked a link?",
+    "I shared my OTP. What now?": "I shared my OTP. What now?",
+    "How do I report a scam?": "How do I report a scam?",
+    "Is this number safe?": "Is this number safe?",
+    "Don't enter any details on the page. If you already did, call your bank immediately to block your card and reset credentials, then call 1930. Change passwords for any account you logged into.": "Don't enter any details on the page. If you already did, call your bank immediately to block your card and reset credentials, then call 1930. Change passwords for any account you logged into.",
+    "Call your bank right away and block all transactions, change your UPI PIN, and report the fraud at cybercrime.gov.in. The first hour (golden hour) is critical for freezing the money.": "Call your bank right away and block all transactions, change your UPI PIN, and report the fraud at cybercrime.gov.in. The first hour (golden hour) is critical for freezing the money.",
+    "Use the Report a Scam tab — it takes under a minute and is anonymous by default. If you lost money, also call 1930 or file a complaint on cybercrime.gov.in.": "Use the Report a Scam tab — it takes under a minute and is anonymous by default. If you lost money, also call 1930 or file a complaint on cybercrime.gov.in.",
+    "Paste the message or number into the checker on the home screen. You can also check recent reports on the Active Threats map and search the number online before responding.": "Paste the message or number into the checker on the home screen. You can also check recent reports on the Active Threats map and search the number online before responding.",
   },
   ta: {
     // Navigation
@@ -260,5 +279,24 @@ export const translations = {
     reportBlock: "பரிவர்த்தனைகளைப் புகாரளித்து தடுக்கவும்",
     commonQ: "பொதுவான கேள்விகள்",
     aboutPlatform: "நமது சுற்றுப்புறங்களில் நடக்கும் மோசடிகளைக் கண்டறிய, புகாரளிக்க மற்றும் தடுக்க உதவும் சமூக ஆதரவு தளம்.",
+    
+    // Help Page Exact Strings
+    "Call 1930": "1930 ஐ அழைக்கவும்",
+    "cybercrime.gov.in": "cybercrime.gov.in",
+    "Your bank": "உங்கள் வங்கி",
+    "National cybercrime helpline": "தேசிய சைபர் கிரைம் உதவி எண்",
+    "File an online complaint": "ஆன்லைனில் புகார் பதிவு செய்ய",
+    "Call the number on your card": "உங்கள் கார்டில் உள்ள எண்ணை அழைக்கவும்",
+    "Available 24×7": "24×7 கிடைக்கும்",
+    "Official government portal": "அதிகாரப்பூர்வ அரசு இணையதளம்",
+    "Report and block transactions": "பரிவர்த்தனைகளைப் புகாரளித்து முடக்க",
+    "What should I do if I clicked a link?": "நான் ஒரு இணைப்பைக் கிளிக் செய்துவிட்டால் என்ன செய்வது?",
+    "I shared my OTP. What now?": "நான் என் OTP-ஐப் பகிர்ந்துவிட்டேன். இப்போது என்ன செய்வது?",
+    "How do I report a scam?": "மோசடியை எப்படிப் புகாரளிப்பது?",
+    "Is this number safe?": "இந்த எண் பாதுகாப்பானதா?",
+    "Don't enter any details on the page. If you already did, call your bank immediately to block your card and reset credentials, then call 1930. Change passwords for any account you logged into.": "அந்தப் பக்கத்தில் எந்த விவரங்களையும் உள்ளிட வேண்டாம். நீங்கள் ஏற்கனவே அவ்வாறு செய்திருந்தால், உங்கள் கார்டை முடக்க உடனடியாக உங்கள் வங்கியை அழைக்கவும், பின்னர் 1930 ஐ அழைக்கவும். நீங்கள் உள்நுழைந்த எந்தக் கணக்கின் கடவுச்சொற்களையும் மாற்றவும்.",
+    "Call your bank right away and block all transactions, change your UPI PIN, and report the fraud at cybercrime.gov.in. The first hour (golden hour) is critical for freezing the money.": "உடனே உங்கள் வங்கியை அழைத்து அனைத்து பரிவர்த்தனைகளையும் முடக்கவும், உங்கள் UPI PIN ஐ மாற்றவும், cybercrime.gov.in இல் புகாரளிக்கவும். பணத்தை முடக்குவதற்கு முதல் மணிநேரம் (பொன்னான நேரம்) மிகவும் முக்கியமானது.",
+    "Use the Report a Scam tab — it takes under a minute and is anonymous by default. If you lost money, also call 1930 or file a complaint on cybercrime.gov.in.": "'புகார்' (Report a Scam) பகுதியைப் பயன்படுத்தவும் - இது ஒரு நிமிடத்திற்கும் குறைவாகவே எடுக்கும் மற்றும் இயல்பாகவே அநாமதேயமானது. நீங்கள் பணத்தை இழந்திருந்தால், 1930 ஐ அழைக்கவும் அல்லது cybercrime.gov.in இல் புகார் அளிக்கவும்.",
+    "Paste the message or number into the checker on the home screen. You can also check recent reports on the Active Threats map and search the number online before responding.": "முகப்புத் திரையில் உள்ள செக்கரில் செய்தி அல்லது எண்ணை ஒட்டவும். மேலும், 'அச்சுறுத்தல்கள்' வரைபடத்தில் சமீபத்திய புகார்களைச் சரிபார்க்கலாம் மற்றும் பதிலளிப்பதற்கு முன் ஆன்லைனில் எண்ணைத் தேடலாம்.",
   }
 };
