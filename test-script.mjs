@@ -1,14 +1,14 @@
-import { analyzeWithGemini } from './src/utils/analyze.js';
+import puppeteer from 'puppeteer';
 
-async function run() {
-  const text = "Sir ungal SBI account block aagidum. Inga click pannunga: https://sbi-kyc-update.xyz/verify";
-  console.log("Testing text only...");
-  try {
-    const res = await analyzeWithGemini(text);
-    console.log("Text Result:", JSON.stringify(res, null, 2));
-  } catch (e) {
-    console.error(e);
-  }
-}
+(async () => {
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+  
+  page.on('console', msg => console.log('PAGE LOG:', msg.text()));
+  page.on('pageerror', error => console.log('PAGE ERROR:', error.message));
+  page.on('requestfailed', request => console.log('REQUEST FAILED:', request.url(), request.failure().errorText));
 
-run();
+  await page.goto('http://localhost:5173/threats', { waitUntil: 'networkidle0' });
+  await new Promise(r => setTimeout(r, 2000));
+  await browser.close();
+})();

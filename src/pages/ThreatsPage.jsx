@@ -16,6 +16,9 @@ const THREATS_TEMPLATE = [
 import { useLanguage } from '../context/LanguageContext';
 
 export default function ThreatsPage() {
+  const { hotspots } = useHotspots(false);
+  const { t } = useLanguage();
+
   // Sort hotspots by report count to show most active areas first
   const sourceThreats = [...hotspots].sort((a,b) => b.reports - a.reports);
 
