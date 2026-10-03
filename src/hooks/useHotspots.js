@@ -28,7 +28,7 @@ export function useHotspots(isSampleMode = false) {
     }
 
     const fetchInitial = async () => {
-      const { data } = await supabase.from('reports').select('*').order('created_at', { ascending: false }).limit(200);
+      const { data } = await supabase.from('reports').select('id, type, content, area, classification, status, created_at').order('created_at', { ascending: false }).limit(200);
       if (data) setReports(data);
     };
 
@@ -54,7 +54,13 @@ export function useHotspots(isSampleMode = false) {
     // Only map scams and suspicious
     if (r.classification !== 'Scam' && r.classification !== 'Suspicious') return;
     
-    const loc = r.area;
+    let loc = (r.area || '').trim();
+    if (loc) {
+      loc = loc.charAt(0).toUpperCase() + loc.slice(1).toLowerCase();
+    } else {
+      loc = 'Unknown';
+    }
+    
     if (loc && locData[loc]) {
       locData[loc].reports += 1;
       

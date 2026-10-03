@@ -25,6 +25,7 @@ export default function ResultPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const text = location.state?.text || '';
+  const area = location.state?.area || 'Unknown';
   const [result, setResult] = useState(null);
   const [shared, setShared] = useState(false);
 
@@ -51,16 +52,20 @@ export default function ResultPage() {
           const type = (data.urls && data.urls.length > 0) ? 'web' : 'msg';
           const content = (data.urls && data.urls.length > 0) ? data.urls[0] : (text ? text.slice(0, 100) : 'Image Upload');
           
-          const areas = ['Velachery', 'Sholinganallur', 'Adyar', 'Perungudi', 'Medavakkam', 'Tharamani'];
-          const randomArea = areas[Math.floor(Math.random() * areas.length)];
-
+          console.log("Inserting report with payload:", { type, content, classification, area, status: 'Pending' });
           supabase.from('reports').insert({
             type,
             content,
             classification,
-            area: randomArea,
+            area,
             status: 'Pending'
-          }).then(({error}) => { if (error) console.error("Supabase insert error:", error); });
+          }).then(({error, data: insertData}) => { 
+            if (error) {
+              console.error("Supabase insert error:", error);
+            } else {
+              console.log("Supabase insert successful:", insertData);
+            }
+          });
           
         } else {
           setResult({

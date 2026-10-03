@@ -19,10 +19,17 @@ function MapController({ hotspots, selectedArea }) {
 
     // Handle container resize (for tabs and hidden views)
     const resizeObserver = new ResizeObserver(() => {
-      map.invalidateSize();
+      if (map) {
+        requestAnimationFrame(() => {
+          map.invalidateSize();
+        });
+      }
     });
     
-    const container = map.getContainer();
+    // Also trigger immediately after mount
+    setTimeout(() => {
+      if (map) map.invalidateSize();
+    }, 100);
     if (container) {
       resizeObserver.observe(container);
     }
@@ -56,7 +63,6 @@ export default function ThreatMap({ hotspots = [], selectedArea = 'All', onSelec
       >
         <TileLayer 
           url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" 
-          className="map-pastel-filter"
         />
         <MapController hotspots={filteredHotspots} selectedArea={selectedArea} />
 
@@ -220,11 +226,6 @@ export default function ThreatMap({ hotspots = [], selectedArea = 'All', onSelec
         .analyst-popup .leaflet-popup-content-wrapper {
            border-radius: 8px;
            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        
-        /* Pastel map filter */
-        .map-pastel-filter {
-          filter: grayscale(0.8) opacity(0.8) contrast(1.1) brightness(1.1) sepia(0.2) hue-rotate(180deg);
         }
       `}</style>
     </div>
