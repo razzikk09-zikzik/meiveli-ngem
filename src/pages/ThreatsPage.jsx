@@ -21,22 +21,12 @@ export default function ThreatsPage() {
   const { hotspots } = useHotspots(false);
   const { t } = useLanguage();
 
-  // Merge hotspots with template so counts match everywhere
-  const dynamicThreats = THREATS_TEMPLATE.map(threat => {
-    const hp = hotspots.find(h => h.name === threat.area);
-    return { ...threat, reports: hp ? hp.reports : 0 };
-  }).filter(threat => threat.reports > 0).sort((a,b) => b.reports - a.reports);
+  // Sort hotspots by report count to show most active areas first
+  const sourceThreats = [...hotspots].sort((a,b) => b.reports - a.reports);
 
-  // Fallback to template if no real reports, for empty state UI purposes if desired
-  // But the requirement says "Counts: markers, map labels and cards must all use the same data source"
-  // So if there are no reports, it will be empty.
-  const sourceThreats = dynamicThreats.length > 0 ? dynamicThreats : THREATS_TEMPLATE.map(threat => ({...threat, reports: 0}));
-
-  // Filter map hotspots by category as well, and match counts exactly
+  // Filter map hotspots by category
   const filteredHotspots = hotspots.filter(h => {
-    const t = THREATS_TEMPLATE.find(th => th.area === h.name);
-    if (!t) return false;
-    if (category !== 'All' && t.category !== category) return false;
+    if (category !== 'All' && h.category !== category) return false;
     return true;
   });
 
@@ -68,7 +58,7 @@ export default function ThreatsPage() {
                   fontFamily: 'var(--font-head)',
                 }}
               >
-                {c === 'All' ? t('all') : c}
+                {c === 'All' ? t('all') : (t(c) || c)}
               </button>
             );
           })}
@@ -101,9 +91,9 @@ export default function ThreatsPage() {
               <img src={threat.iconUrl} alt="" style={{ width: '1.5rem', height: '1.5rem', objectFit: 'contain' }} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a' }}>{threat.title}</div>
-              <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.125rem' }}>
-                {threat.area} · <span style={{ color: '#DC2626', fontWeight: '700' }}>{threat.reports} {threat.reports === 1 ? t('reportSingular') : t('reportsPlural')}</span>
+              <div style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t(threat.title) || threat.title}</div>
+              <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.125rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {t(threat.area) || threat.area} · <span style={{ color: '#DC2626', fontWeight: '700' }}>{threat.reports} {threat.reports === 1 ? t('reportSingular') : t('reportsPlural')}</span>
               </div>
             </div>
             <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="9 18 15 12 9 6" /></svg>

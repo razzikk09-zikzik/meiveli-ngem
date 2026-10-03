@@ -45,27 +45,43 @@ export function useHotspots(isSampleMode = false) {
     };
   }, [isSampleMode]);
 
+  const getCategoryDetails = (content, type) => {
+    const lower = (content || '').toLowerCase();
+    if (lower.includes('kyc') || lower.includes('sbi') || lower.includes('hdfc') || lower.includes('pan') || lower.includes('bank')) {
+      return { title: 'Bank KYC scam', category: 'Bank KYC', iconUrl: '/assets/bank_kyc_impersonation.png', color: '#DC2626', bg: '#FEF2F2' };
+    }
+    if (lower.includes('courier') || lower.includes('delivery') || lower.includes('package') || lower.includes('fedex')) {
+      return { title: 'Courier scam', category: 'Courier', iconUrl: '/assets/courier_refund_scam.png', color: '#EA580C', bg: '#FFF7ED' };
+    }
+    if (lower.includes('upi') || lower.includes('qr') || lower.includes('paytm') || lower.includes('rupees') || lower.includes('rs.')) {
+      return { title: 'UPI scam', category: 'UPI', iconUrl: '/assets/upi_payment.png', color: '#9333EA', bg: '#F5F3FF' };
+    }
+    if (lower.includes('job') || lower.includes('work') || lower.includes('earn') || lower.includes('salary')) {
+      return { title: 'Job offer scam', category: 'Job offer', iconUrl: '/assets/fake_job_recruitment.png', color: '#D97706', bg: '#FFFBEB' };
+    }
+    if (type === 'web') {
+      return { title: 'Phishing link', category: 'Fake link', iconUrl: '/assets/website_url.png', color: '#0D9488', bg: '#F0FDFA' };
+    }
+    return { title: 'Suspicious SMS', category: 'Fake link', iconUrl: '/assets/sms.png', color: '#2563EB', bg: '#EFF6FF' };
+  };
+
   const locData = {};
   Object.keys(AREAS).forEach(k => {
-    locData[k] = { name: k, ...AREAS[k], reports: 0, types: {}, latestTime: null };
+    locData[k] = { name: k, ...AREAS[k], reports: 0, categories: {}, latestTime: null };
   });
 
   reports.forEach(r => {
-    // Only map scams and suspicious
     if (r.classification !== 'Scam' && r.classification !== 'Suspicious') return;
     
     let loc = (r.area || '').trim();
-    if (loc) {
-      loc = loc.charAt(0).toUpperCase() + loc.slice(1).toLowerCase();
-    } else {
-      loc = 'Unknown';
-    }
+    loc = loc ? loc.charAt(0).toUpperCase() + loc.slice(1).toLowerCase() : 'Unknown';
     
     if (loc && locData[loc]) {
       locData[loc].reports += 1;
       
-      const typeStr = r.type === 'web' ? 'Phishing URL' : 'SMS Scam';
-      locData[loc].types[typeStr] = (locData[loc].types[typeStr] || 0) + 1;
+      const catDetails = getCategoryDetails(r.content, r.type);
+      const catKey = JSON.stringify(catDetails);
+      locData[loc].categories[catKey] = (locData[loc].categories[catKey] || 0) + 1;
       
       if (!locData[loc].latestTime || new Date(r.created_at) > new Date(locData[loc].latestTime)) {
         locData[loc].latestTime = r.created_at;
@@ -73,18 +89,28 @@ export function useHotspots(isSampleMode = false) {
     }
   });
 
-  // Calculate dominant type and risk level
   const hotspots = Object.values(locData)
     .filter(h => h.reports > 0)
     .map(h => {
-      let dominant = 'Unknown';
+      let dominantStr = null;
       let maxCount = 0;
-      Object.entries(h.types).forEach(([t, count]) => {
-        if (count > maxCount) { maxCount = count; dominant = t; }
+      Object.entries(h.categories).forEach(([cStr, count]) => {
+        if (count > maxCount) { maxCount = count; dominantStr = cStr; }
       });
+      
+      let details = {};
+      if (dominantStr) {
+        details = JSON.parse(dominantStr);
+      }
+
       return {
         ...h,
-        dominantType: dominant,
+        dominantType: details.category || 'Unknown',
+        title: details.title || 'Scam',
+        category: details.category || 'Fake link',
+        iconUrl: details.iconUrl || '/assets/sms.png',
+        color: details.color || '#2563EB',
+        bg: details.bg || '#EFF6FF',
         risk: h.reports >= 10 ? 'high' : h.reports >= 5 ? 'medium' : 'low'
       };
     });
