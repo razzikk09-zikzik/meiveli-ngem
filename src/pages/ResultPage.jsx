@@ -1,7 +1,7 @@
 // src/pages/ResultPage.jsx — scam analysis result with local heuristic fallback
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { analyzeLocally, VERDICT_META } from '../utils/analyze';
+import { analyzeLocally, analyzeWithGemini, VERDICT_META } from '../utils/analyze';
 
 const SIGNAL_ICONS = {
   link: 'M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71',
@@ -35,15 +35,9 @@ export default function ResultPage() {
 
     const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 2500);
+    const timer = setTimeout(() => controller.abort(), 15000);
 
-    fetch(`${apiUrl}/analyze`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text }),
-      signal: controller.signal,
-    })
-      .then((res) => (res.ok ? res.json() : Promise.reject(new Error('API Error'))))
+    analyzeWithGemini(text)
       .then((data) => {
         if (cancelled) return;
         if (data && typeof data.score === 'number' && data.verdict) {
@@ -52,7 +46,10 @@ export default function ResultPage() {
           setResult(local);
         }
       })
-      .catch(() => { if (!cancelled) setResult(local); })
+      .catch((err) => { 
+        console.error("Analysis error:", err);
+        if (!cancelled) setResult(local); 
+      })
       .finally(() => clearTimeout(timer));
 
     return () => { cancelled = true; controller.abort(); clearTimeout(timer); };

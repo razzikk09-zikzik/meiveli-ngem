@@ -1,6 +1,8 @@
 // Local heuristic scam analysis.
 // Runs in the browser so the Result page always shows a verdict,
 // even when the backend API (VITE_API_URL) is unreachable.
+import { GoogleGenerativeAI } from '@google/generative-ai';
+
 
 const LINK_RE = /(https?:\/\/[^\s]+|www\.[^\s]+|\b[\w-]+\.(?:com|in|net|org|xyz|top|info|online|site|club|icu|link|live|shop|store|buzz)\b[^\s]*)/gi;
 
@@ -163,3 +165,54 @@ export const VERDICT_META = {
     color: '#15803D',
   },
 };
+
+export async function analyzeWithGemini(text) {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) {
+    throw new Error('Gemini API key is not configured');
+  }
+  
+  const genAI = new GoogleGenerativeAI(apiKey);
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
+
+  const prompt = `
+Analyze the following message for scams, phishing, or malicious intent. 
+Provide a JSON response with the following structure (no markdown, just raw JSON):
+{
+  "score": <number between 0 and 100, where 100 is highly malicious/scam and 0 is safe>,
+  "verdict": <string, one of "safe", "suspicious", "scam">,
+  "signals": [
+    {
+      "key": <string, a short key like "link", "urgency", "money", "credentials", "contact">,
+      "title": <string, short title of the signal, e.g. "Fake KYC hook">,
+      "detail": <string, short explanation of the signal>
+    }
+  ],
+  "similarReports": <string or null, e.g. "Seen in multiple reports from your area">
+}
+
+Ensure "signals" has up to 4 elements.
+
+Message to analyze:
+"${text}"
+`;
+
+  try {
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    let textRes = response.text();
+    // Strip markdown if present
+    textRes = textRes.replace(/```json/gi, '').replace(/```/g, '').trim();
+    
+    const parsed = JSON.parse(textRes);
+    
+    // Fallback urls parsing
+    const urls = text.match(LINK_RE) || [];
+    parsed.urls = urls;
+    
+    return parsed;
+  } catch (err) {
+    console.error("Gemini Error:", err);
+    throw err;
+  }
+}
