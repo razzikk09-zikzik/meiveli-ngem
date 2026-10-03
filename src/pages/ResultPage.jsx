@@ -1,7 +1,7 @@
-// src/pages/ResultPage.jsx — scam analysis result with local heuristic fallback
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { analyzeWithGemini, VERDICT_META } from '../utils/analyze';
+import { supabase } from '../utils/supabase';
 
 const SIGNAL_ICONS = {
   link: 'M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71',
@@ -43,6 +43,21 @@ export default function ResultPage() {
         if (cancelled) return;
         if (data && typeof data.score === 'number' && data.verdict) {
           setResult(data);
+          
+          // Log to Supabase
+          let classification = 'Safe';
+          if (data.verdict === 'scam') classification = 'Scam';
+          if (data.verdict === 'suspicious') classification = 'Suspicious';
+          const type = (data.urls && data.urls.length > 0) ? 'web' : 'msg';
+          const content = (data.urls && data.urls.length > 0) ? data.urls[0] : (text ? text.slice(0, 100) : 'Image Upload');
+          
+          supabase.from('reports').insert({
+            type,
+            content,
+            classification,
+            status: 'Pending'
+          }).then(({error}) => { if (error) console.error("Supabase insert error:", error); });
+          
         } else {
           setResult({
             score: 0,

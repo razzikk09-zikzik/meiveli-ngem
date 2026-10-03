@@ -142,33 +142,7 @@ export default function HomePage() {
         Check for Scam
       </button>
 
-      {/* 5. Quick Actions Row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0.5rem', marginTop: '0.5rem' }}>
-        <button onClick={() => navigate('/report')} style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.75rem', padding: '0.75rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-          <div style={{ width: '2rem', height: '2rem', background: '#FEE2E2', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-          </div>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0f172a', textAlign: 'center', lineHeight: 1.2 }}>Report<br/>a Scam</span>
-        </button>
-        <button onClick={() => navigate('/threats')} style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.75rem', padding: '0.75rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-          <div style={{ width: '2rem', height: '2rem', background: '#DCFCE7', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#16A34A" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-          </div>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0f172a', textAlign: 'center', lineHeight: 1.2 }}>Check<br/>Number</span>
-        </button>
-        <button onClick={() => navigate('/threats')} style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.75rem', padding: '0.75rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-          <div style={{ width: '2rem', height: '2rem', background: '#F3E8FF', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#9333EA" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-          </div>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0f172a', textAlign: 'center', lineHeight: 1.2 }}>Check<br/>UPI ID</span>
-        </button>
-        <button onClick={() => navigate('/guide')} style={{ background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.75rem', padding: '0.75rem', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>
-          <div style={{ width: '2rem', height: '2rem', background: '#FFFBEB', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#D97706" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
-          </div>
-          <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#0f172a', textAlign: 'center', lineHeight: 1.2 }}>Learn &<br/>Stay Safe</span>
-        </button>
-      </div>
+
 
       {/* 6. Recent Alerts Card */}
       <div style={{ ...cardStyle, marginTop: '0.5rem' }}>
