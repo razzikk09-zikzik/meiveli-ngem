@@ -62,6 +62,10 @@ Check for:
 - suspicious domain names
 - typosquatting
 
+CRITICAL RULE FOR SBI: 
+The ONLY official domains for State Bank of India (SBI) are "sbi.co.in", "onlinesbi.sbi", and "bank.sbi".
+If a message claims to be from SBI (or mentions SBI KYC/rewards) but contains ANY link that is NOT on these exact official domains (including shorteners like tinyurl/bit.ly or fakes like sbi-kyc.xyz), you MUST classify it as SCAM with HIGH risk.
+
 If an image is provided, inspect the original image directly.
 Use OCR only as supporting information.
 
