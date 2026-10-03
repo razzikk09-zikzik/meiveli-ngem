@@ -1,7 +1,7 @@
 // src/pages/ThreatsPage.jsx — active threats map + filterable list
 import { useState } from 'react';
 import ThreatMap from '../components/ThreatMap';
-import { useHotspots } from '../hooks/useHotspots';
+import { useHotspots, getCategoryDetails } from '../hooks/useHotspots';
 
 const THREATS_TEMPLATE = [
   { id: 1, title: 'Fake SBI KYC link', category: 'Bank KYC', area: 'Velachery', iconUrl: '/assets/bank_kyc_impersonation.png', color: '#DC2626', bg: '#FEF2F2' },
@@ -16,11 +16,33 @@ const THREATS_TEMPLATE = [
 import { useLanguage } from '../context/LanguageContext';
 
 export default function ThreatsPage() {
-  const { hotspots } = useHotspots(false);
+  const { hotspots, reports } = useHotspots(false);
   const { t } = useLanguage();
+  const [expandedId, setExpandedId] = useState(null);
 
-  // Sort hotspots by report count to show most active areas first
-  const sourceThreats = [...hotspots].sort((a,b) => b.reports - a.reports);
+  // Group reports by exact content to identify top specific threats
+  const threatGroups = {};
+  reports.forEach(r => {
+    if (r.classification !== 'Scam' && r.classification !== 'Suspicious') return;
+    const key = (r.content || '').trim();
+    if (!key) return;
+    if (!threatGroups[key]) {
+      const details = getCategoryDetails(key, r.type);
+      threatGroups[key] = {
+        id: key,
+        content: key,
+        title: details.title || 'Scam',
+        bg: details.bg || '#EFF6FF',
+        iconUrl: details.iconUrl || '/assets/sms.png',
+        count: 0
+      };
+    }
+    threatGroups[key].count += 1;
+  });
+
+  const topContentThreats = Object.values(threatGroups)
+    .sort((a,b) => b.count - a.count)
+    .slice(0, 10); // Show top 10 most reported links/sms
 
   return (
     <div style={{ padding: '1rem', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))', display: 'flex', flexDirection: 'column', gap: '0.875rem', maxWidth: '32rem', margin: '0 auto', width: '100%' }}>
@@ -37,34 +59,43 @@ export default function ThreatsPage() {
 
       {/* Campaign Cards */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-        {sourceThreats.length === 0 && (
+        {topContentThreats.length === 0 && (
           <div style={{ background: '#fff', border: '1px dashed #CBD5E1', borderRadius: '0.75rem', padding: '1.25rem', textAlign: 'center', color: '#64748b', fontSize: '0.875rem' }}>
             {t('noThreats')}
           </div>
         )}
-        {sourceThreats.map((threat) => (
-          <button
-            key={threat.name}
-            style={{
-              background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.875rem', padding: '0.875rem',
-              display: 'flex', alignItems: 'center', gap: '0.75rem', textAlign: 'left', cursor: 'pointer',
-              boxShadow: '0 1px 3px rgba(16,24,40,0.05)', width: '100%',
-            }}
-          >
-            <div style={{ width: '2.75rem', height: '2.75rem', borderRadius: '50%', background: threat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-              <img src={threat.iconUrl} alt="" style={{ width: '1.5rem', height: '1.5rem', objectFit: 'contain' }} />
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {threat.latestContent || t(threat.title) || threat.title}
+        {topContentThreats.map((threat) => {
+          const isExpanded = expandedId === threat.id;
+          return (
+            <button
+              key={threat.id}
+              onClick={() => setExpandedId(isExpanded ? null : threat.id)}
+              style={{
+                background: '#fff', border: '1px solid #E6EAF2', borderRadius: '0.875rem', padding: '0.875rem',
+                display: 'flex', alignItems: 'flex-start', gap: '0.75rem', textAlign: 'left', cursor: 'pointer',
+                boxShadow: '0 1px 3px rgba(16,24,40,0.05)', width: '100%',
+              }}
+            >
+              <div style={{ width: '2.75rem', height: '2.75rem', borderRadius: '50%', background: threat.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <img src={threat.iconUrl} alt="" style={{ width: '1.5rem', height: '1.5rem', objectFit: 'contain' }} />
               </div>
-              <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.125rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {t(threat.title)} · {t(threat.name) || threat.name} · <span style={{ color: '#DC2626', fontWeight: '700' }}>{threat.reports} {threat.reports === 1 ? t('reportSingular') : t('reportsPlural')}</span>
+              <div style={{ flex: 1, minWidth: 0, alignSelf: 'center' }}>
+                <div style={{ 
+                  fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a', 
+                  whiteSpace: isExpanded ? 'normal' : 'nowrap', 
+                  overflow: 'hidden', textOverflow: 'ellipsis',
+                  wordBreak: 'break-word'
+                }}>
+                  {threat.content}
+                </div>
+                <div style={{ fontSize: '0.8125rem', color: '#64748b', marginTop: '0.25rem' }}>
+                  {t(threat.title)} · <span style={{ color: '#DC2626', fontWeight: '700' }}>{threat.count} {threat.count === 1 ? t('reportSingular') : t('reportsPlural')}</span>
+                </div>
               </div>
-            </div>
-            <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}><polyline points="9 18 15 12 9 6" /></svg>
-          </button>
-        ))}
+              <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: '0.875rem', transform: isExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s ease' }}><polyline points="6 9 12 15 18 9" /></svg>
+            </button>
+          );
+        })}
       </div>
     </div>
   );

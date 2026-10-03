@@ -18,6 +18,26 @@ const SAMPLE_DATA = [
   ...Array(2).fill({ area: 'Medavakkam', classification: 'Scam', type: 'web' }),
 ];
 
+export const getCategoryDetails = (content, type) => {
+  const lower = (content || '').toLowerCase();
+  if (lower.includes('kyc') || lower.includes('sbi') || lower.includes('hdfc') || lower.includes('pan') || lower.includes('bank')) {
+    return { title: 'Bank KYC scam', category: 'Bank KYC', iconUrl: '/assets/bank_kyc_impersonation.png', color: '#DC2626', bg: '#FEF2F2' };
+  }
+  if (lower.includes('courier') || lower.includes('delivery') || lower.includes('package') || lower.includes('fedex')) {
+    return { title: 'Courier scam', category: 'Courier', iconUrl: '/assets/courier_refund_scam.png', color: '#EA580C', bg: '#FFF7ED' };
+  }
+  if (lower.includes('upi') || lower.includes('qr') || lower.includes('paytm') || lower.includes('rupees') || lower.includes('rs.')) {
+    return { title: 'UPI scam', category: 'UPI', iconUrl: '/assets/upi_payment.png', color: '#9333EA', bg: '#F5F3FF' };
+  }
+  if (lower.includes('job') || lower.includes('work') || lower.includes('earn') || lower.includes('salary')) {
+    return { title: 'Job offer scam', category: 'Job offer', iconUrl: '/assets/fake_job_recruitment.png', color: '#D97706', bg: '#FFFBEB' };
+  }
+  if (type === 'web') {
+    return { title: 'Phishing link', category: 'Fake link', iconUrl: '/assets/website_url.png', color: '#0D9488', bg: '#F0FDFA' };
+  }
+  return { title: 'Suspicious SMS', category: 'Fake link', iconUrl: '/assets/sms.png', color: '#2563EB', bg: '#EFF6FF' };
+};
+
 export function useHotspots(isSampleMode = false) {
   const [reports, setReports] = useState([]);
   
@@ -44,26 +64,6 @@ export function useHotspots(isSampleMode = false) {
       supabase.removeChannel(sub);
     };
   }, [isSampleMode]);
-
-  const getCategoryDetails = (content, type) => {
-    const lower = (content || '').toLowerCase();
-    if (lower.includes('kyc') || lower.includes('sbi') || lower.includes('hdfc') || lower.includes('pan') || lower.includes('bank')) {
-      return { title: 'Bank KYC scam', category: 'Bank KYC', iconUrl: '/assets/bank_kyc_impersonation.png', color: '#DC2626', bg: '#FEF2F2' };
-    }
-    if (lower.includes('courier') || lower.includes('delivery') || lower.includes('package') || lower.includes('fedex')) {
-      return { title: 'Courier scam', category: 'Courier', iconUrl: '/assets/courier_refund_scam.png', color: '#EA580C', bg: '#FFF7ED' };
-    }
-    if (lower.includes('upi') || lower.includes('qr') || lower.includes('paytm') || lower.includes('rupees') || lower.includes('rs.')) {
-      return { title: 'UPI scam', category: 'UPI', iconUrl: '/assets/upi_payment.png', color: '#9333EA', bg: '#F5F3FF' };
-    }
-    if (lower.includes('job') || lower.includes('work') || lower.includes('earn') || lower.includes('salary')) {
-      return { title: 'Job offer scam', category: 'Job offer', iconUrl: '/assets/fake_job_recruitment.png', color: '#D97706', bg: '#FFFBEB' };
-    }
-    if (type === 'web') {
-      return { title: 'Phishing link', category: 'Fake link', iconUrl: '/assets/website_url.png', color: '#0D9488', bg: '#F0FDFA' };
-    }
-    return { title: 'Suspicious SMS', category: 'Fake link', iconUrl: '/assets/sms.png', color: '#2563EB', bg: '#EFF6FF' };
-  };
 
   const locData = {};
   Object.keys(AREAS).forEach(k => {
