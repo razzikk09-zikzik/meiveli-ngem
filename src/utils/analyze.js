@@ -2,6 +2,12 @@
 // Runs in the browser so the Result page always shows a verdict,
 // even when the backend API (VITE_API_URL) is unreachable.
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import linksRaw from '../assets/links.txt?raw';
+import termsRaw from '../assets/malicious-terms.txt?raw';
+
+const KNOWN_BAD_LINKS = new Set(linksRaw.split('\n').map(l => l.trim().toLowerCase()).filter(Boolean));
+const KNOWN_BAD_TERMS = termsRaw.split('\n').map(t => t.trim().toLowerCase()).filter(Boolean);
+
 
 
 const LINK_RE = /(https?:\/\/[^\s]+|www\.[^\s]+|\b[\w-]+\.(?:com|in|net|org|xyz|top|info|online|site|club|icu|link|live|shop|store|buzz)\b[^\s]*)/gi;
@@ -167,6 +173,17 @@ export const VERDICT_META = {
 };
 
 export async function analyzeWithGemini(text) {
+  const tLower = text.toLowerCase();
+  
+  // Local list checks first
+  const urls = text.match(LINK_RE) || [];
+  const foundBadLink = urls.find(u => {
+    let domain = u.replace(/^https?:\/\//i, '').split('/')[0].toLowerCase();
+    return KNOWN_BAD_LINKS.has(domain) || KNOWN_BAD_LINKS.has(domain.replace(/^www\./i, ''));
+  });
+  
+  const foundBadTerm = KNOWN_BAD_TERMS.find(term => tLower.includes(term));
+
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error('Gemini API key is not configured');
@@ -192,6 +209,9 @@ Provide a JSON response with the following structure (no markdown, just raw JSON
 }
 
 Ensure "signals" has up to 4 elements.
+
+${foundBadLink ? `CRITICAL: The message contains a known malicious link (${foundBadLink}). YOU MUST SCORE THIS 95-100 AND VERDICT MUST BE "scam". ADD A SIGNAL FOR IT.` : ''}
+${foundBadTerm ? `CRITICAL: The message contains a known scam phrase ("${foundBadTerm}"). YOU MUST SCORE THIS > 85 AND VERDICT MUST BE "scam" OR "suspicious". ADD A SIGNAL FOR IT.` : ''}
 
 Message to analyze:
 "${text}"
