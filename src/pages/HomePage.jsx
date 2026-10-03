@@ -12,6 +12,7 @@ export default function HomePage() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [language, setLanguage] = useState('en');
   const [area, setArea] = useState('Velachery'); // default selected area
+  const [alertIndex, setAlertIndex] = useState(0);
   const navigate = useNavigate();
   const { hotspots } = useHotspots(false);
 
@@ -135,7 +136,7 @@ export default function HomePage() {
 
       {/* 6. Recent Alerts Card */}
       <div style={{ ...cardStyle, marginTop: '0.5rem' }}>
-        <div style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #E6EAF2' }}>
+        <div style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#EA580C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
             <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '1rem', color: '#0f172a' }}>Recent Alerts</h2>
@@ -143,31 +144,98 @@ export default function HomePage() {
           <button onClick={() => navigate('/threats')} style={{ fontSize: '0.8125rem', color: '#2563EB', fontWeight: 600, background: 'none', border: 'none' }}>View All →</button>
         </div>
         
-        {/* Amber Campaign Strip */}
-        <div onClick={() => navigate('/threats')} style={{ background: '#FFF7E6', padding: '0.75rem 1rem', display: 'flex', gap: '0.75rem', alignItems: 'center', borderBottom: '1px solid #E6EAF2' }}>
-          <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#EA580C" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{flexShrink: 0}}><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: "var(--font-head)", fontWeight: '700', fontSize: '0.875rem', color: '#DC2626' }}>Active scam campaign reported</div>
-            <div style={{ fontSize: '0.75rem', color: '#475569' }}>in Velachery, 14 reports this week.</div>
-          </div>
-          <span style={{ color: '#DC2626', fontSize: '0.625rem', fontWeight: 700, background: '#FEE2E2', padding: '0.125rem 0.375rem', borderRadius: '1rem' }}>SCAM</span>
-        </div>
+        {/* Carousel Content */}
+        <div style={{ position: 'relative', background: '#FFF9F0', padding: '1.25rem 1rem', margin: '0 0.5rem 0.5rem', borderRadius: '0.75rem', border: '1px solid #FEF08A' }}>
+          {/* Navigation Arrows */}
+          <button 
+            onClick={() => setAlertIndex(prev => prev === 0 ? 3 : prev - 1)}
+            style={{ position: 'absolute', left: '0.5rem', top: '45%', transform: 'translateY(-50%)', width: '2rem', height: '2rem', borderRadius: '50%', background: '#fff', border: '1px solid #E6EAF2', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}
+          >
+            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <button 
+            onClick={() => setAlertIndex(prev => prev === 3 ? 0 : prev + 1)}
+            style={{ position: 'absolute', right: '0.5rem', top: '45%', transform: 'translateY(-50%)', width: '2rem', height: '2rem', borderRadius: '50%', background: '#fff', border: '1px solid #E6EAF2', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}
+          >
+            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
 
-        {/* 2 Scam Cards */}
-        {scamCards.slice(0, 2).map((card, idx) => {
-          const isHigh = card.risk === 'high';
-          const badgeBg = isHigh ? '#FEE2E2' : '#FEF3C7';
-          const badgeColor = isHigh ? '#B91C1C' : '#B45309';
-          return (
-            <div key={card.id} style={{ padding: '0.75rem 1rem', display: 'flex', gap: '0.75rem', alignItems: 'center', borderBottom: idx === 0 ? '1px solid #E6EAF2' : 'none' }}>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                <div style={{ fontFamily: "var(--font-head)", fontWeight: '700', fontSize: '0.875rem', color: '#0f172a' }}>{card.title}</div>
-                <div style={{ fontSize: '0.75rem', color: '#475569' }}>{card.desc}</div>
+          {/* Slide Content */}
+          <div style={{ padding: '0 2rem' }}>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <div style={{ width: '3rem', height: '3rem', borderRadius: '0.5rem', background: '#FEE2E2', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                {alertIndex % 2 === 0 ? (
+                  <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="10" width="16" height="10" rx="2" ry="2"/><path d="M12 14v4"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                ) : (
+                  <svg width="1.5rem" height="1.5rem" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                )}
               </div>
-              <span style={{ color: badgeColor, fontSize: '0.625rem', fontWeight: 700, background: badgeBg, padding: '0.125rem 0.375rem', borderRadius: '1rem', textTransform: 'uppercase' }}>{isHigh ? 'SCAM' : 'SUSPICIOUS'}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
+                  <span style={{ color: '#DC2626', fontSize: '0.625rem', fontWeight: 800, background: '#FEE2E2', padding: '0.125rem 0.375rem', borderRadius: '1rem', textTransform: 'uppercase' }}>SCAM</span>
+                  <span style={{ fontSize: '0.6875rem', color: '#DC2626', display: 'flex', alignItems: 'center', gap: '0.25rem', fontWeight: 600 }}>
+                    <svg width="0.75rem" height="0.75rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    14 reports
+                  </span>
+                </div>
+                <div style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.9375rem', color: '#0f172a', lineHeight: 1.2, marginBottom: '0.25rem' }}>{alertIndex % 2 === 0 ? "Bank KYC Impersonation" : "Courier Refund Scam"}</div>
+                <div style={{ fontSize: '0.75rem', color: '#475569', lineHeight: 1.4, marginBottom: '0.5rem' }}>Fake bank messages asking for OTP and account verification links.</div>
+                
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', color: '#64748b', fontSize: '0.6875rem' }}>
+                    <svg width="0.75rem" height="0.75rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                    Velachery · 2 hours ago
+                  </div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>{alertIndex + 1} / 4</div>
+                </div>
+              </div>
             </div>
-          )
-        })}
+          </div>
+          
+          {/* Dots */}
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.375rem', marginTop: '1rem' }}>
+            {[0, 1, 2, 3].map(i => (
+              <div key={i} style={{ width: '0.4rem', height: '0.4rem', borderRadius: '50%', background: i === alertIndex ? '#3B82F6' : '#CBD5E1' }} />
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* 7. Tamil Nadu Police Awareness Video Card */}
+      <div style={{ ...cardStyle, marginTop: '0.5rem' }}>
+        <div style={{ padding: '0.75rem 1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+            <div style={{ width: '1.75rem', height: '1.75rem', borderRadius: '50%', background: '#3B82F6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="1rem" height="1rem" viewBox="0 0 24 24" fill="#fff" stroke="#fff" strokeWidth="2" strokeLinejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </div>
+            <div>
+              <h2 style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '1rem', color: '#0f172a' }}>Tamil Nadu Police Awareness</h2>
+              <p style={{ fontSize: '0.75rem', color: '#64748b' }}>Learn how to avoid getting scammed</p>
+            </div>
+          </div>
+          <button onClick={() => navigate('/guide')} style={{ fontSize: '0.8125rem', color: '#2563EB', fontWeight: 600, background: 'none', border: 'none' }}>View More →</button>
+        </div>
+        
+        <div style={{ padding: '0 1rem 1rem' }}>
+          <div style={{ width: '100%', aspectRatio: '16/9', borderRadius: '0.5rem', overflow: 'hidden', background: '#000', marginBottom: '0.75rem' }}>
+            <iframe 
+              width="100%" 
+              height="100%" 
+              src="https://www.youtube.com/embed/kdgS_eGopio?rel=0" 
+              title="Tamil Nadu Police Awareness" 
+              frameBorder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowFullScreen
+            ></iframe>
+          </div>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
+            <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="#DC2626" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: '0.125rem' }}><rect x="2" y="5" width="20" height="14" rx="2" ry="2"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+            <div>
+              <div style={{ fontFamily: "var(--font-head)", fontWeight: '700', fontSize: '0.875rem', color: '#0f172a' }}>How to avoid getting scammed</div>
+              <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Tamil Nadu Police, Government of Tamil Nadu</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
