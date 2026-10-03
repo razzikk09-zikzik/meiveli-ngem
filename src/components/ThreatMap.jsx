@@ -3,19 +3,19 @@ import { MapContainer, TileLayer, Marker, Tooltip, useMap, Popup } from 'react-l
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-function MapController({ hotspots }) {
+function MapController({ hotspots, selectedArea }) {
   const map = useMap();
-  const initialized = useRef(false);
 
   useEffect(() => {
-    if (hotspots.length === 0) return;
-    
-    // Fit bounds once on first load
-    if (!initialized.current) {
+    // Handle bounds when hotspots change
+    if (hotspots.length > 0) {
       const bounds = L.latLngBounds(hotspots.map(h => [h.lat, h.lng]));
-      map.fitBounds(bounds, { padding: [40, 40] });
-      initialized.current = true;
+      map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+    } else {
+      // If no markers, center on South Chennai
+      map.setView([12.97, 80.23], 11);
     }
+
 
     // Handle container resize (for tabs and hidden views)
     const resizeObserver = new ResizeObserver(() => {
@@ -54,8 +54,11 @@ export default function ThreatMap({ hotspots = [], selectedArea = 'All', onSelec
         style={{ height: '100%', width: '100%', background: '#F6F8FC', zIndex: 0 }}
         attributionControl={false}
       >
-        <TileLayer url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
-        <MapController hotspots={filteredHotspots} />
+        <TileLayer 
+          url="https://tile.openstreetmap.org/{z}/{x}/{y}.png" 
+          className="map-pastel-filter"
+        />
+        <MapController hotspots={filteredHotspots} selectedArea={selectedArea} />
 
         {filteredHotspots.map(spot => {
           // Heat effect without a new library (scaling halo based on count)
@@ -181,7 +184,7 @@ export default function ThreatMap({ hotspots = [], selectedArea = 'All', onSelec
 
       {/* Legend */}
       {mode === 'citizen' && (
-        <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', background: 'white', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', zIndex: 1000 }}>
+        <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', background: 'white', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', zIndex: 1000 }}>
            <div style={{ width: '120px', height: '8px', background: 'linear-gradient(to right, #3B82F6, #F59E0B, #EF4444)', borderRadius: '4px', marginBottom: '0.25rem' }}></div>
            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: '#64748B', fontWeight: '600' }}>
              <span>Low Reports</span>
@@ -191,7 +194,7 @@ export default function ThreatMap({ hotspots = [], selectedArea = 'All', onSelec
       )}
       
       {mode === 'analyst' && (
-        <div style={{ position: 'absolute', bottom: '1rem', right: '1rem', background: 'rgba(255,255,255,0.9)', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', zIndex: 1000 }}>
+        <div style={{ position: 'absolute', bottom: '1rem', left: '1rem', background: 'white', padding: '0.5rem 0.75rem', borderRadius: '0.5rem', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)', zIndex: 1000 }}>
            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '4px' }}>
               <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: '#DC2626' }}></div>
               <span style={{ fontSize: '0.75rem', color: '#0F1B4C', fontWeight: '600' }}>High (10+)</span>
@@ -217,6 +220,11 @@ export default function ThreatMap({ hotspots = [], selectedArea = 'All', onSelec
         .analyst-popup .leaflet-popup-content-wrapper {
            border-radius: 8px;
            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Pastel map filter */
+        .map-pastel-filter {
+          filter: grayscale(0.8) opacity(0.8) contrast(1.1) brightness(1.1) sepia(0.2) hue-rotate(180deg);
         }
       `}</style>
     </div>

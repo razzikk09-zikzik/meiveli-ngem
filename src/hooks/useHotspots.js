@@ -11,11 +11,11 @@ export const AREAS = {
 };
 
 const SAMPLE_DATA = [
-  ...Array(15).fill({ location: 'Velachery', classification: 'Scam', type: 'web' }),
-  ...Array(8).fill({ location: 'Sholinganallur', classification: 'Suspicious', type: 'sms' }),
-  ...Array(5).fill({ location: 'Adyar', classification: 'Scam', type: 'web' }),
-  ...Array(3).fill({ location: 'Perungudi', classification: 'Suspicious', type: 'sms' }),
-  ...Array(2).fill({ location: 'Medavakkam', classification: 'Scam', type: 'web' }),
+  ...Array(15).fill({ area: 'Velachery', classification: 'Scam', type: 'web' }),
+  ...Array(8).fill({ area: 'Sholinganallur', classification: 'Suspicious', type: 'sms' }),
+  ...Array(5).fill({ area: 'Adyar', classification: 'Scam', type: 'web' }),
+  ...Array(3).fill({ area: 'Perungudi', classification: 'Suspicious', type: 'sms' }),
+  ...Array(2).fill({ area: 'Medavakkam', classification: 'Scam', type: 'web' }),
 ];
 
 export function useHotspots(isSampleMode = false) {
@@ -54,7 +54,7 @@ export function useHotspots(isSampleMode = false) {
     // Only map scams and suspicious
     if (r.classification !== 'Scam' && r.classification !== 'Suspicious') return;
     
-    const loc = r.location;
+    const loc = r.area;
     if (loc && locData[loc]) {
       locData[loc].reports += 1;
       

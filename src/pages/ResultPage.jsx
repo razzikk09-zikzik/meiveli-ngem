@@ -58,7 +58,7 @@ export default function ResultPage() {
             type,
             content,
             classification,
-            location: randomArea,
+            area: randomArea,
             status: 'Pending'
           }).then(({error}) => { if (error) console.error("Supabase insert error:", error); });
           

@@ -53,7 +53,7 @@ export default function AnalystDashboard() {
   // Compute filtered reports
   const filteredReports = (selectedArea === 'All South Chennai' || selectedArea === 'All')
     ? reports 
-    : reports.filter(r => r.location === selectedArea);
+    : reports.filter(r => r.area === selectedArea);
 
   const totalReports = filteredReports.length;
   
@@ -88,7 +88,11 @@ export default function AnalystDashboard() {
   const scamPct = Math.round((scamCount / totalCls) * 100);
   const suspPct = Math.round((suspCount / totalCls) * 100);
   const safePct = Math.round((safeCount / totalCls) * 100);
-  const conic = `conic-gradient(#EF4444 0% ${scamPct}%, #FBBF24 ${scamPct}% ${scamPct + suspPct}%, #10B981 ${scamPct + suspPct}% 100%)`;
+
+  const scamLen = (scamPct / 100) * 100;
+  const suspLen = (suspPct / 100) * 100;
+  const safeLen = (safePct / 100) * 100;
+  const c = 2 * Math.PI * 15.9155; // circumference for r=15.9155 (which is 100)
 
   return (
     <div className="dashboard-shell">
@@ -154,6 +158,7 @@ export default function AnalystDashboard() {
             display: flex;
             flex-direction: column;
             min-height: 0;
+            overflow: hidden;
           }
           
           .card-header {
@@ -179,24 +184,29 @@ export default function AnalystDashboard() {
             text-overflow: ellipsis;
             max-width: 200px;
           }
-            
-          .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
+
+          /* Segmented Control */
+          .segmented-control {
+            display: flex;
+            background: #F1F5F9;
+            border-radius: 20px;
+            padding: 2px;
+            border: 1px solid #E2E8F0;
           }
-          .toggle-switch input { opacity: 0; width: 0; height: 0; }
-          .slider {
-            position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #CBD5E1; transition: .4s; border-radius: 24px;
+          .segment {
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 18px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #64748B;
           }
-          .slider:before {
-            position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
-            background-color: white; transition: .4s; border-radius: 50%;
+          .segment.active {
+            background: #3B82F6;
+            color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
           }
-          input:checked + .slider { background-color: #F59E0B; }
-          input:checked + .slider:before { transform: translateX(20px); }
 
           @media (max-width: 999px), (max-height: 599px) {
             .dashboard-shell {
@@ -220,25 +230,18 @@ export default function AnalystDashboard() {
       <header className="topbar">
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <img src="/assets/logo.png" alt="MEYVIZHI" style={{ height: '40px', objectFit: 'contain' }} />
-          <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <span style={{ fontSize: '0.65rem', color: '#64748B', fontWeight: '600' }}>See the scam. Trace the threat.</span>
-          </div>
           {isSampleMode && (
-            <div style={{ background: '#FEF3C7', color: '#B45309', padding: '0.2rem 0.5rem', borderRadius: '1rem', fontSize: '0.7rem', fontWeight: '700', marginLeft: '1rem' }}>
-              Sample Data Active
+            <div style={{ background: '#FEF3C7', color: '#B45309', padding: '0.2rem 0.6rem', borderRadius: '1rem', fontSize: '0.75rem', fontWeight: '700' }}>
+              Sample Data
             </div>
           )}
         </div>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', fontWeight: '600', color: '#475569' }}>
-            <span>Live Data</span>
-            <label className="toggle-switch">
-              <input type="checkbox" checked={isSampleMode} onChange={e => setIsSampleMode(e.target.checked)} />
-              <span className="slider"></span>
-            </label>
-            <span style={{ color: isSampleMode ? '#F59E0B' : '#475569' }}>Sample Data</span>
+          <div className="segmented-control">
+             <div className={`segment ${!isSampleMode ? 'active' : ''}`} onClick={() => setIsSampleMode(false)}>Live Data</div>
+             <div className={`segment ${isSampleMode ? 'active' : ''}`} onClick={() => setIsSampleMode(true)}>Sample Data</div>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
@@ -297,11 +300,14 @@ export default function AnalystDashboard() {
               </div>
             </div>
             
-            <div style={{ flex: 1, minHeight: 0, position: 'relative', marginTop: '0.75rem' }} ref={graphContainerRef}>
+            <div style={{ flex: 1, minHeight: 0, position: 'relative', marginTop: '0.75rem', borderRadius: '0.5rem', overflow: 'hidden' }} ref={graphContainerRef}>
                {reports.length === 0 ? (
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: '#94A3B8' }}>No reports to map.</div>
                ) : (
                   <>
+                     <div style={{ position: 'absolute', top: 10, left: '50%', transform: 'translateX(-50%)', zIndex: 10, background: 'rgba(255,255,255,0.9)', padding: '2px 10px', borderRadius: '1rem', fontSize: '0.75rem', fontWeight: 600, color: '#475569' }}>
+                        Based on {totalReports} reports
+                     </div>
                      <div style={{ position: 'absolute', inset: 0, visibility: activeTab === 'Map' ? 'visible' : 'hidden' }}>
                         <ThreatMap hotspots={hotspots} selectedArea={selectedArea} mode="analyst" onSelect={(spot) => {
                            if (spot.type === 'campaign_from_map') {
@@ -329,14 +335,30 @@ export default function AnalystDashboard() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', minHeight: 0 }}>
              <div className="card" style={{ flex: 1 }}>
                <h3 className="card-header">Report Classification</h3>
-               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10%', flexWrap: 'wrap', flex: 1, minHeight: 0 }}>
-                 <div style={{ position: 'relative', width: '35%', aspectRatio: '1/1', flexShrink: 0, borderRadius: '50%', background: conic, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                   <div style={{ width: '80%', height: '80%', background: '#fff', borderRadius: '50%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                     <span style={{ fontWeight: '800', fontSize: '1.25rem', color: '#0F1B4C', fontFamily: 'var(--font-head)' }}>{totalCls}</span>
-                     <span style={{ fontSize: '0.6rem', color: '#64748B' }}>Reports</span>
-                   </div>
+               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', flexWrap: 'wrap', flex: 1, minHeight: 0 }}>
+                 
+                 {/* Fully scalable Donut via SVG viewBox */}
+                 <div style={{ flex: 1, minHeight: 0, minWidth: '40%', height: '100%', display: 'flex', justifyContent: 'center', position: 'relative' }}>
+                    <svg viewBox="0 0 36 36" style={{ width: '100%', height: '100%', maxHeight: '150px' }}>
+                       {/* Background Track */}
+                       <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#F1F5F9" strokeWidth="4" />
+                       
+                       {/* Scam Segment */}
+                       {scamLen > 0 && <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#EF4444" strokeWidth="4" strokeDasharray={`${scamLen} ${100 - scamLen}`} />}
+                       
+                       {/* Suspicious Segment */}
+                       {suspLen > 0 && <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#FBBF24" strokeWidth="4" strokeDasharray={`${suspLen} ${100 - suspLen}`} strokeDashoffset={-scamLen} />}
+                       
+                       {/* Safe Segment */}
+                       {safeLen > 0 && <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#10B981" strokeWidth="4" strokeDasharray={`${safeLen} ${100 - safeLen}`} strokeDashoffset={-(scamLen + suspLen)} />}
+                    </svg>
+                    <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                      <span style={{ fontWeight: '800', fontSize: '1.25rem', color: '#0F1B4C', fontFamily: 'var(--font-head)' }}>{totalReports}</span>
+                      <span style={{ fontSize: '0.6rem', color: '#64748B' }}>Reports</span>
+                    </div>
                  </div>
-                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', flex: 1 }}>
+
+                 <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1, minWidth: '40%' }}>
                    <LegendItem color="#EF4444" label="Scam" pct={`${scamPct}%`} val={`(${scamCount})`} />
                    <LegendItem color="#FBBF24" label="Suspicious" pct={`${suspPct}%`} val={`(${suspCount})`} />
                    <LegendItem color="#10B981" label="Safe" pct={`${safePct}%`} val={`(${safeCount})`} />
@@ -346,7 +368,7 @@ export default function AnalystDashboard() {
 
              <div className="card" style={{ flex: 1 }}>
                <h3 className="card-header">Top Areas</h3>
-               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1, justifyContent: 'center' }}>
+               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', flex: 1, justifyContent: 'center', minHeight: 0, overflow: 'hidden' }}>
                   {sortedHotspots.length === 0 ? <div style={{ color: '#94A3B8', fontSize: '0.8rem' }}>No data</div> : sortedHotspots.map(h => (
                     <div key={h.name}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: '600', marginBottom: '2px', color: '#475569' }}>
@@ -389,7 +411,7 @@ export default function AnalystDashboard() {
                   {filteredReports.length === 0 ? (
                     <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center', color: '#64748B' }}>No reports found.</td></tr>
                   ) : filteredReports.map(r => (
-                    <TableRow key={r.id || Math.random()} id={`#${String(r.id || '000').slice(0,4)}`} type={r.type} content={r.content || 'N/A'} area={r.location || 'Unknown'} classif={r.classification} status={r.status || 'Pending'} time={r.created_at ? new Date(r.created_at).toLocaleString() : 'Just now'} />
+                    <TableRow key={r.id || Math.random()} id={`#${String(r.id || '000').slice(0,4)}`} type={r.type} content={r.content || 'N/A'} area={r.area || 'Unknown'} classif={r.classification} status={r.status || 'Pending'} time={r.created_at ? new Date(r.created_at).toLocaleString() : 'Just now'} />
                   ))}
                 </tbody>
               </table>
