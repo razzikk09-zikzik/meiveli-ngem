@@ -55,8 +55,8 @@ export default function GuidePage() {
               <s.icon size={20} color={s.color} strokeWidth={2.25} />
             </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a' }}>{s.title}</div>
-              <div style={{ fontSize: '0.8125rem', color: '#64748b' }}>{s.desc}</div>
+              <div style={{ fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', color: '#0f172a' }}>{t(s.title) || s.title}</div>
+              <div style={{ fontSize: '0.8125rem', color: '#64748b' }}>{t(s.desc) || s.desc}</div>
             </div>
             <ChevronRight size={18} color="#94A3B8" style={{ flexShrink: 0 }} />
           </button>
