@@ -50,7 +50,21 @@ export default function ResultPage() {
       })
       .catch((err) => { 
         console.error("Analysis error:", err);
-        if (!cancelled) setResult(local); 
+        if (!cancelled) {
+          setResult({
+            ...local,
+            score: text ? local.score : 0,
+            verdict: text ? local.verdict : 'suspicious',
+            signals: [
+              ...local.signals,
+              {
+                key: 'brand',
+                title: 'AI Analysis Failed',
+                detail: 'Our AI engine is currently unavailable (API Error). Advanced scanning was disabled.'
+              }
+            ]
+          });
+        }
       })
       .finally(() => clearTimeout(timer));
 
