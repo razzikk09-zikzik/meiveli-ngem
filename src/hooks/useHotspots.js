@@ -67,7 +67,7 @@ export function useHotspots(isSampleMode = false) {
 
   const locData = {};
   Object.keys(AREAS).forEach(k => {
-    locData[k] = { name: k, ...AREAS[k], reports: 0, categories: {}, latestTime: null };
+    locData[k] = { name: k, ...AREAS[k], reports: 0, categories: {}, latestTime: null, latestContent: null };
   });
 
   reports.forEach(r => {
@@ -85,6 +85,7 @@ export function useHotspots(isSampleMode = false) {
       
       if (!locData[loc].latestTime || new Date(r.created_at) > new Date(locData[loc].latestTime)) {
         locData[loc].latestTime = r.created_at;
+        locData[loc].latestContent = r.content;
       }
     }
   });
