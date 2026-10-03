@@ -10,7 +10,7 @@ const KNOWN_BAD_TERMS = termsRaw.split('\n').map(t => t.trim().toLowerCase()).fi
 
 
 
-const LINK_RE = /(https?:\/\/[^\s]+|www\.[^\s]+|\b[\w-]+\.(?:com|in|net|org|xyz|top|info|online|site|club|icu|link|live|shop|store|buzz)\b[^\s]*)/gi;
+const LINK_RE = /(https?:\/\/[^\s]+|www\.[^\s]+|\b[\w-]+\.[a-z]{2,}\b[^\s]*)/gi;
 
 const URGENCY_WORDS = [
   'urgent', 'immediately', 'immediate action', 'blocked', 'suspend', 'suspended',
