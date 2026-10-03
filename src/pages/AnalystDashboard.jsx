@@ -349,5 +349,4 @@ function PendingItem({ type, content, time, classif }) {
       <span style={{ padding: '0.25rem 0.75rem', borderRadius: '1rem', fontSize: '0.75rem', fontWeight: '600', color: cColor, background: cBg, flexShrink: 0 }}>{classif}</span>
     </div>
   );
-}  );
 }
