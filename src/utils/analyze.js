@@ -28,9 +28,9 @@ export const VERDICT_META = {
 };
 
 export async function analyzeWithGemini(text, imageBase64 = null) {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  const apiKey = localStorage.getItem('MEYVIZHI_GEMINI_API_KEY') || import.meta.env.VITE_GEMINI_API_KEY;
   if (!apiKey) {
-    throw new Error('Gemini API key is not configured');
+    throw new Error('Gemini API key is not configured. Please set it in Settings.');
   }
   
   const genAI = new GoogleGenerativeAI(apiKey);

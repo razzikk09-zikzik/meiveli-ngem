@@ -10,11 +10,13 @@ import GuidePage from './pages/GuidePage';
 import HelpPage from './pages/HelpPage';
 import BottomTabBar from './components/BottomTabBar';
 import MobileTopBar from './components/MobileTopBar';
+import SettingsModal from './components/SettingsModal';
 
 export default function App() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [language, setLanguage] = useState('ta');
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 768);
@@ -25,14 +27,15 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="app-shell">
+        {showSettings && <SettingsModal onClose={() => setShowSettings(false)} />}
         {!isMobile && (
           <Sidebar collapsed={sidebarCollapsed} onToggle={() => setSidebarCollapsed((c) => !c)} />
         )}
         <div className="main-content">
           {isMobile ? (
-            <MobileTopBar language={language} onLanguageToggle={setLanguage} />
+            <MobileTopBar language={language} onLanguageToggle={setLanguage} onOpenSettings={() => setShowSettings(true)} />
           ) : (
-            <TopBar language={language} onLanguageToggle={setLanguage} />
+            <TopBar language={language} onLanguageToggle={setLanguage} onOpenSettings={() => setShowSettings(true)} />
           )}
           <main className="page-scroll" style={{ paddingBottom: isMobile ? 'calc(4.5rem + env(safe-area-inset-bottom))' : '1rem' }}>
             <Routes>

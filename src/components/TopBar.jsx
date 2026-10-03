@@ -1,6 +1,6 @@
 // src/components/TopBar.jsx
 
-export default function TopBar({ language, onLanguageToggle }) {
+export default function TopBar({ language, onLanguageToggle, onOpenSettings }) {
   return (
     <header
       style={{
@@ -177,18 +177,18 @@ export default function TopBar({ language, onLanguageToggle }) {
           </span>
         </div>
 
-        {/* Analyst Access */}
+        {/* Settings */}
         <button
-          id="analyst-access-btn"
+          onClick={onOpenSettings}
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.375rem',
             padding: '0.4375rem 0.9375rem',
             borderRadius: '1.25rem',
-            border: '0.09375rem solid #7C3AED',
+            border: '0.09375rem solid #64748b',
             background: 'transparent',
-            color: '#7C3AED',
+            color: '#64748b',
             fontFamily: "var(--font-head)",
             fontWeight: '700',
             fontSize: '0.78125rem',
@@ -196,17 +196,15 @@ export default function TopBar({ language, onLanguageToggle }) {
             whiteSpace: 'nowrap',
             transition: 'background 0.15s',
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = '#F5F3FF')}
+          onMouseEnter={(e) => (e.currentTarget.style.background = '#F1F5F9')}
           onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
         >
-          {/* Bar chart filled icon */}
-          <svg width="0.875rem" height="0.875rem" viewBox="0 0 24 24" fill="#7C3AED">
-            <path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/>
+          {/* Settings gear icon */}
+          <svg width="0.875rem" height="0.875rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
           </svg>
-          Analyst Access
-          <svg width="0.8125rem" height="0.8125rem" viewBox="0 0 24 24" fill="#7C3AED">
-            <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
-          </svg>
+          Settings
         </button>
       </div>
     </header>
