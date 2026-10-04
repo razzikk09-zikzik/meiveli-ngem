@@ -20,8 +20,8 @@ export default function HomePage() {
   // Compute top threats (grouping web by domain, SMS by exact text)
   const threatGroups = {};
   reports.forEach(r => {
-    // Exclude Safe reports, but include Scam, Suspicious, and Pending to match dashboard counts
-    if (r.classification === 'Safe') return;
+    // Only show confirmed Scam and Suspicious cases for citizen mobile view
+    if (r.classification !== 'Scam' && r.classification !== 'Suspicious') return;
     let key = (r.content || '').trim();
     if (!key) return;
     
