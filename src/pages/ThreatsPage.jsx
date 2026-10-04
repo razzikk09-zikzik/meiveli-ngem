@@ -51,7 +51,7 @@ export default function ThreatsPage() {
 
   const topContentThreats = Object.values(threatGroups)
     .sort((a,b) => b.count - a.count)
-    .slice(0, 10); // Show top 10 most reported threats
+    .slice(0, 5); // Show top 5 most reported threats
 
   return (
     <div style={{ padding: '1rem', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))', display: 'flex', flexDirection: 'column', gap: '0.875rem', maxWidth: '32rem', margin: '0 auto', width: '100%' }}>
