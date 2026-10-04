@@ -57,12 +57,22 @@ export const TRUSTED_DOMAINS = {
   "kvb.co.in": { organization: "Karur Vysya Bank", category: "banking", trustLevel: "official", aliases: ["KVB"] },
   "cityunionbank.com": { organization: "City Union Bank", category: "banking", trustLevel: "official", aliases: ["CUB"] },
   "tmb.in": { organization: "Tamilnad Mercantile Bank", category: "banking", trustLevel: "official", aliases: ["TMB"] },
+  "idfcfirstbank.com": { organization: "IDFC FIRST Bank", category: "banking", trustLevel: "official", aliases: ["IDFC"] },
+  "rblbank.com": { organization: "RBL Bank", category: "banking", trustLevel: "official", aliases: ["RBL"] },
+  "bandhanbank.com": { organization: "Bandhan Bank", category: "banking", trustLevel: "official" },
+  "sc.com": { organization: "Standard Chartered", category: "banking", trustLevel: "official" },
+  "citi.com": { organization: "Citibank", category: "banking", trustLevel: "official" },
+  "hsbc.co.in": { organization: "HSBC India", category: "banking", trustLevel: "official" },
 
   // ==========================================
   // REGULATORY
   // ==========================================
   "rbi.org.in": { organization: "Reserve Bank of India", category: "government", trustLevel: "official", aliases: ["RBI"] },
   "npci.org.in": { organization: "National Payments Corporation of India", category: "government", trustLevel: "official", aliases: ["NPCI"] },
+  "sebi.gov.in": { organization: "SEBI", category: "government", trustLevel: "official" },
+  "epfindia.gov.in": { organization: "EPFO", category: "government", trustLevel: "official", aliases: ["PF", "EPF"] },
+  "nsdl.co.in": { organization: "NSDL", category: "government", trustLevel: "official" },
+  "cdslindia.com": { organization: "CDSL", category: "government", trustLevel: "official" },
 
   // ==========================================
   // INSURANCE
@@ -92,6 +102,15 @@ export const TRUSTED_DOMAINS = {
   "amazonpay.in": { organization: "Amazon Pay", category: "payment", trustLevel: "official" },
   "bhimupi.org.in": { organization: "BHIM", category: "payment", trustLevel: "official" },
   "cred.club": { organization: "CRED", category: "payment", trustLevel: "official" },
+  "paypal.com": { organization: "PayPal", category: "payment", trustLevel: "official" },
+  "stripe.com": { organization: "Stripe", category: "payment", trustLevel: "official" },
+  "razorpay.com": { organization: "Razorpay", category: "payment", trustLevel: "official" },
+  "payu.in": { organization: "PayU", category: "payment", trustLevel: "official" },
+  "billdesk.com": { organization: "BillDesk", category: "payment", trustLevel: "official" },
+  "ccavenue.com": { organization: "CCAvenue", category: "payment", trustLevel: "official" },
+  "visa.com": { organization: "Visa", category: "payment", trustLevel: "official" },
+  "mastercard.com": { organization: "Mastercard", category: "payment", trustLevel: "official" },
+  "americanexpress.com": { organization: "American Express", category: "payment", trustLevel: "official", aliases: ["Amex"] },
 
   // ==========================================
   // E-COMMERCE / DELIVERY / FOOD
@@ -110,6 +129,10 @@ export const TRUSTED_DOMAINS = {
   "bigbasket.com": { organization: "BigBasket", category: "ecommerce", trustLevel: "official" },
   "jiomart.com": { organization: "JioMart", category: "ecommerce", trustLevel: "official" },
   "tatacliq.com": { organization: "Tata CLiQ", category: "ecommerce", trustLevel: "official" },
+  "ebay.com": { organization: "eBay", category: "ecommerce", trustLevel: "official" },
+  "alibaba.com": { organization: "Alibaba", category: "ecommerce", trustLevel: "official" },
+  "aliexpress.com": { organization: "AliExpress", category: "ecommerce", trustLevel: "official" },
+  "walmart.com": { organization: "Walmart", category: "ecommerce", trustLevel: "official" },
 
   // ==========================================
   // COURIER / LOGISTICS
@@ -139,6 +162,14 @@ export const TRUSTED_DOMAINS = {
   "yatra.com": { organization: "Yatra", category: "travel", trustLevel: "official" },
   "redbus.in": { organization: "redBus", category: "travel", trustLevel: "official" },
   "goibibo.com": { organization: "Goibibo", category: "travel", trustLevel: "official" },
+  "uber.com": { organization: "Uber", category: "transport", trustLevel: "official" },
+  "olacabs.com": { organization: "Ola", category: "transport", trustLevel: "official" },
+  "rapido.bike": { organization: "Rapido", category: "transport", trustLevel: "official" },
+  "booking.com": { organization: "Booking.com", category: "travel", trustLevel: "official" },
+  "agoda.com": { organization: "Agoda", category: "travel", trustLevel: "official" },
+  "expedia.com": { organization: "Expedia", category: "travel", trustLevel: "official" },
+  "airbnb.com": { organization: "Airbnb", category: "travel", trustLevel: "official" },
+  "airbnb.co.in": { organization: "Airbnb India", category: "travel", trustLevel: "official" },
 
   // ==========================================
   // TELECOM
@@ -187,6 +218,38 @@ export const TRUSTED_DOMAINS = {
   "netflix.com": { organization: "Netflix", category: "streaming", trustLevel: "official" },
   "hotstar.com": { organization: "Disney+ Hotstar", category: "streaming", trustLevel: "official" },
   "primevideo.com": { organization: "Amazon Prime Video", category: "streaming", trustLevel: "official" },
+  "github.com": { organization: "GitHub", category: "tech", trustLevel: "official" },
+  "stackoverflow.com": { organization: "Stack Overflow", category: "tech", trustLevel: "official" },
+  "aws.amazon.com": { organization: "AWS", category: "tech", trustLevel: "official" },
+  "azure.com": { organization: "Microsoft Azure", category: "tech", trustLevel: "official" },
+  "wikipedia.org": { organization: "Wikipedia", category: "information", trustLevel: "official" },
+  "yahoo.com": { organization: "Yahoo", category: "tech", trustLevel: "official" },
+  "bing.com": { organization: "Bing", category: "tech", trustLevel: "official" },
+  "zoom.us": { organization: "Zoom", category: "tech", trustLevel: "official" },
+  "slack.com": { organization: "Slack", category: "tech", trustLevel: "official" },
+  "discord.com": { organization: "Discord", category: "social", trustLevel: "official" },
+  "reddit.com": { organization: "Reddit", category: "social", trustLevel: "official" },
+  "tiktok.com": { organization: "TikTok", category: "social", trustLevel: "official" },
+  "pinterest.com": { organization: "Pinterest", category: "social", trustLevel: "official" },
+  "spotify.com": { organization: "Spotify", category: "streaming", trustLevel: "official" },
+  "openai.com": { organization: "OpenAI", category: "tech", trustLevel: "official" },
+  "chatgpt.com": { organization: "ChatGPT", category: "tech", trustLevel: "official" },
+  "samsung.com": { organization: "Samsung", category: "tech", trustLevel: "official" },
+
+  // ==========================================
+  // NEWS & MEDIA
+  // ==========================================
+  "timesofindia.indiatimes.com": { organization: "Times of India", category: "news", trustLevel: "official" },
+  "ndtv.com": { organization: "NDTV", category: "news", trustLevel: "official" },
+  "thehindu.com": { organization: "The Hindu", category: "news", trustLevel: "official" },
+  "indianexpress.com": { organization: "The Indian Express", category: "news", trustLevel: "official" },
+  "hindustantimes.com": { organization: "Hindustan Times", category: "news", trustLevel: "official" },
+  "bbc.com": { organization: "BBC", category: "news", trustLevel: "official" },
+  "bbc.co.uk": { organization: "BBC", category: "news", trustLevel: "official" },
+  "cnn.com": { organization: "CNN", category: "news", trustLevel: "official" },
+  "nytimes.com": { organization: "New York Times", category: "news", trustLevel: "official" },
+  "reuters.com": { organization: "Reuters", category: "news", trustLevel: "official" },
+  "bloomberg.com": { organization: "Bloomberg", category: "news", trustLevel: "official" },
 };
 
 export const COMMON_URL_SHORTENERS = new Set([
