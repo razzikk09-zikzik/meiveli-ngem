@@ -167,7 +167,7 @@ export default function ReportPage() {
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value.slice(0, 1000))}
-                placeholder="Sir ungali SBI account block aagidum. Irga click pannunga: sbi-kyc-update.in/verify"
+                placeholder={t('reportPlaceholder')}
                 style={{ width: '100%', minHeight: '5.5rem', border: 'none', background: 'transparent', resize: 'none', outline: 'none', fontFamily: 'var(--font-body)', fontSize: 'max(16px, 0.875rem)', color: '#1e293b' }}
               />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>

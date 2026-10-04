@@ -39,6 +39,15 @@ export default function AnalystDashboard() {
     }
   }, [activeTab]);
 
+  const handleUpdateClassification = async (id, newClassif, newStatus) => {
+    if (isSampleMode) return; // don't update mock data in DB
+    try {
+      await supabase.from('reports').update({ classification: newClassif, status: newStatus }).eq('id', id);
+    } catch (error) {
+      console.error("Failed to update report", error);
+    }
+  };
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     navigate('/login');
@@ -405,13 +414,25 @@ export default function AnalystDashboard() {
                     <th style={{ padding: '0.5rem 1rem', fontWeight: '600', borderBottom: '1px solid #E6EAF2' }}>Classification</th>
                     <th style={{ padding: '0.5rem 1rem', fontWeight: '600', borderBottom: '1px solid #E6EAF2' }}>Status</th>
                     <th style={{ padding: '0.5rem 1rem', fontWeight: '600', borderBottom: '1px solid #E6EAF2' }}>Time</th>
+                    <th style={{ padding: '0.5rem 1rem', fontWeight: '600', borderBottom: '1px solid #E6EAF2', textAlign: 'right' }}>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredReports.length === 0 ? (
-                    <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center', color: '#64748B' }}>No reports found.</td></tr>
+                    <tr><td colSpan="8" style={{ padding: '2rem', textAlign: 'center', color: '#64748B' }}>No reports found.</td></tr>
                   ) : filteredReports.map(r => (
-                    <TableRow key={r.id || Math.random()} id={`#${String(r.id || '000').slice(0,4)}`} type={r.type} content={r.content || 'N/A'} area={r.area || 'Unknown'} classif={r.classification} status={r.status || 'Pending'} time={r.created_at ? new Date(r.created_at).toLocaleString() : 'Just now'} />
+                    <TableRow 
+                      key={r.id || Math.random()} 
+                      rawId={r.id}
+                      id={`#${String(r.id || '000').slice(0,4)}`} 
+                      type={r.type} 
+                      content={r.content || 'N/A'} 
+                      area={r.area || 'Unknown'} 
+                      classif={r.classification} 
+                      status={r.status || 'Pending'} 
+                      time={r.created_at ? new Date(r.created_at).toLocaleString() : 'Just now'} 
+                      onUpdate={handleUpdateClassification}
+                    />
                   ))}
                 </tbody>
               </table>
@@ -477,7 +498,7 @@ function LegendItem({ color, label, pct, val }) {
   );
 }
 
-function TableRow({ id, type, content, area, classif, status, time }) {
+function TableRow({ rawId, id, type, content, area, classif, status, time, onUpdate }) {
   const isWeb = type === 'web';
   const cColor = classif === 'Scam' ? '#EF4444' : classif === 'Safe' ? '#10B981' : '#F59E0B';
   const cBg = classif === 'Scam' ? '#FEE2E2' : classif === 'Safe' ? '#D1FAE5' : '#FEF3C7';
@@ -507,6 +528,28 @@ function TableRow({ id, type, content, area, classif, status, time }) {
         <span style={{ padding: '0.2rem 0.6rem', borderRadius: '1rem', fontSize: '0.7rem', fontWeight: '600', color: sColor, background: sBg }}>{status}</span>
       </td>
       <td style={{ padding: '0.75rem 1rem', color: '#64748B', fontSize: '0.75rem', whiteSpace: 'nowrap' }}>{time}</td>
+      <td style={{ padding: '0.75rem 1rem', textAlign: 'right' }}>
+        {status === 'Pending' && rawId && (
+          <div style={{ display: 'flex', gap: '0.375rem', justifyContent: 'flex-end' }}>
+            <button 
+              onClick={() => onUpdate(rawId, 'Scam', 'Resolved')}
+              style={{ background: '#FEE2E2', color: '#EF4444', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '0.375rem', fontSize: '0.75rem', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }}
+              onMouseOver={(e) => e.target.style.background = '#FCA5A5'}
+              onMouseOut={(e) => e.target.style.background = '#FEE2E2'}
+            >
+              Approve
+            </button>
+            <button 
+              onClick={() => onUpdate(rawId, 'Safe', 'Resolved')}
+              style={{ background: '#D1FAE5', color: '#10B981', border: 'none', padding: '0.3rem 0.6rem', borderRadius: '0.375rem', fontSize: '0.75rem', fontWeight: '600', cursor: 'pointer', transition: 'background 0.2s' }}
+              onMouseOver={(e) => e.target.style.background = '#6EE7B7'}
+              onMouseOut={(e) => e.target.style.background = '#D1FAE5'}
+            >
+              Reject
+            </button>
+          </div>
+        )}
+      </td>
     </tr>
   );
 }

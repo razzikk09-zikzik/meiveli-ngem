@@ -58,6 +58,9 @@ export function useHotspots(isSampleMode = false) {
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reports' }, (payload) => {
         setReports(prev => [payload.new, ...prev]);
       })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'reports' }, (payload) => {
+        setReports(prev => prev.map(r => r.id === payload.new.id ? payload.new : r));
+      })
       .subscribe();
 
     return () => {
