@@ -11,11 +11,9 @@ export const AREAS = {
 };
 
 const SAMPLE_DATA = [
-  ...Array(15).fill({ area: 'Velachery', classification: 'Scam', type: 'web' }),
-  ...Array(8).fill({ area: 'Sholinganallur', classification: 'Suspicious', type: 'sms' }),
-  ...Array(5).fill({ area: 'Adyar', classification: 'Scam', type: 'web' }),
-  ...Array(3).fill({ area: 'Perungudi', classification: 'Suspicious', type: 'sms' }),
-  ...Array(2).fill({ area: 'Medavakkam', classification: 'Scam', type: 'web' }),
+  ...Array(3).fill(null).map((_, i) => ({ id: 100+i, area: 'Velachery', classification: 'Scam', status: 'Approved', type: 'web', content: 'http://sbi-kyc-update.xyz/login', indicator_key: 'sbi-kyc-update.xyz', created_at: new Date().toISOString() })),
+  ...Array(3).fill(null).map((_, i) => ({ id: 200+i, area: 'Sholinganallur', classification: 'Scam', status: 'Approved', type: 'sms', content: 'Dear user your HDFC account is blocked. Update PAN here: http://hdfc.kyc-update-pan.in', indicator_key: 'hdfc.kyc-update-pan.in', created_at: new Date().toISOString() })),
+  ...Array(4).fill(null).map((_, i) => ({ id: 300+i, area: 'Adyar', classification: 'Suspicious', status: 'Pending', type: 'sms', content: 'You have won Rs. 50,000! Click http://reward.com to claim', indicator_key: 'reward.com', created_at: new Date().toISOString() })),
 ];
 
 export const getCategoryDetails = (content, type) => {
@@ -38,7 +36,7 @@ export const getCategoryDetails = (content, type) => {
   return { title: 'Suspicious SMS', category: 'Fake link', iconUrl: '/assets/sms.png', color: '#2563EB', bg: '#EFF6FF' };
 };
 
-export function useHotspots(isSampleMode = false) {
+export function useHotspots(isSampleMode = false, mode = 'citizen') {
   const [reports, setReports] = useState([]);
   
   useEffect(() => {
@@ -48,7 +46,7 @@ export function useHotspots(isSampleMode = false) {
     }
 
     const fetchInitial = async () => {
-      const { data } = await supabase.from('reports').select('id, type, content, area, classification, status, created_at').order('created_at', { ascending: false }).limit(200);
+      const { data } = await supabase.from('reports').select('id, type, content, area, classification, status, indicator_key, reviewed_at, reviewed_by, created_at').order('created_at', { ascending: false }).limit(200);
       if (data) setReports(data);
     };
 
@@ -74,6 +72,11 @@ export function useHotspots(isSampleMode = false) {
   });
 
   reports.forEach(r => {
+    // Only approved/scam/suspicious count towards hotspots in citizen view
+    if (r.status !== 'Approved' && !isSampleMode && mode !== 'analyst') return; // in sample mode allow them? Wait, citizen side only approved.
+    if (mode === 'citizen' && r.status !== 'Approved') return;
+    if (r.status === 'Rejected') return; // Rejected is always excluded from map/KPIs
+    
     if (r.classification !== 'Scam' && r.classification !== 'Suspicious') return;
     
     let loc = (r.area || '').trim();
