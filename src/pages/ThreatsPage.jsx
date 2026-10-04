@@ -20,17 +20,25 @@ export default function ThreatsPage() {
   const { t } = useLanguage();
   const [expandedId, setExpandedId] = useState(null);
 
-  // Group reports by exact content to identify top specific threats
+  // Group reports by domain (for web) or exact content (for sms)
   const threatGroups = {};
   reports.forEach(r => {
     if (r.classification !== 'Scam' && r.classification !== 'Suspicious') return;
-    const key = (r.content || '').trim();
+    let key = (r.content || '').trim();
     if (!key) return;
+    
+    let isWeb = r.type === 'web' || key.startsWith('http');
+    if (isWeb) {
+      try { key = new URL(key.startsWith('http') ? key : `https://${key}`).hostname; } catch(e){}
+    }
+    
     if (!threatGroups[key]) {
-      const details = getCategoryDetails(key, r.type);
+      const details = getCategoryDetails(r.content, r.type);
       threatGroups[key] = {
         id: key,
         content: key,
+        originalContent: r.content, // To show full text if needed
+        isWeb,
         title: details.title || 'Scam',
         bg: details.bg || '#EFF6FF',
         iconUrl: details.iconUrl || '/assets/sms.png',
@@ -42,7 +50,7 @@ export default function ThreatsPage() {
 
   const topContentThreats = Object.values(threatGroups)
     .sort((a,b) => b.count - a.count)
-    .slice(0, 10); // Show top 10 most reported links/sms
+    .slice(0, 10); // Show top 10 most reported threats
 
   return (
     <div style={{ padding: '1rem', paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))', display: 'flex', flexDirection: 'column', gap: '0.875rem', maxWidth: '32rem', margin: '0 auto', width: '100%' }}>

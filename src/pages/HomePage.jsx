@@ -17,25 +17,38 @@ export default function HomePage() {
   const navigate = useNavigate();
   const { hotspots, reports } = useHotspots(false);
 
-  // Compute Top Domains dynamically from live reports
-  const domainCounts = {};
-  reports.filter(r => r.type === 'web' && r.content && r.classification === 'Scam').forEach(r => {
-    let domain = r.content;
-    try { domain = new URL(r.content.startsWith('http') ? r.content : `https://${r.content}`).hostname; } catch(e){}
-    domainCounts[domain] = (domainCounts[domain] || 0) + 1;
+  // Compute top threats (grouping web by domain, SMS by exact text)
+  const threatGroups = {};
+  reports.forEach(r => {
+    if (r.classification !== 'Scam' && r.classification !== 'Suspicious') return;
+    let key = (r.content || '').trim();
+    if (!key) return;
+    
+    let isWeb = r.type === 'web' || key.startsWith('http');
+    if (isWeb) {
+      try { key = new URL(key.startsWith('http') ? key : `https://${key}`).hostname; } catch(e){}
+    }
+    
+    if (!threatGroups[key]) {
+      threatGroups[key] = { id: key, content: key, isWeb, count: 0 };
+    }
+    threatGroups[key].count += 1;
   });
-  const topDomains = Object.entries(domainCounts).sort((a,b) => b[1] - a[1]).slice(0, 4);
+  
+  const topThreats = Object.values(threatGroups)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 4);
 
   // Auto-slide for Recent Alerts carousel
   useEffect(() => {
     const timer = setInterval(() => {
       setAlertIndex((prev) => {
-        if (topDomains.length === 0) return 0;
-        return prev === topDomains.length - 1 ? 0 : prev + 1;
+        if (topThreats.length === 0) return 0;
+        return prev === topThreats.length - 1 ? 0 : prev + 1;
       });
     }, 4000);
     return () => clearInterval(timer);
-  }, [topDomains.length]);
+  }, [topThreats.length]);
 
   const handleVoice = () => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -172,17 +185,17 @@ export default function HomePage() {
         
         {/* Carousel Content */}
         <div style={{ position: 'relative', background: currentTheme.cardBg, padding: '0.375rem 0.5rem', margin: '0 0.375rem 0.375rem', borderRadius: '0.5rem', border: `1px solid ${currentTheme.cardBorder}`, transition: 'background-color 0.3s ease, border-color 0.3s ease' }}>
-          {topDomains.length > 0 ? (
+          {topThreats.length > 0 ? (
             <>
               {/* Navigation Arrows */}
               <button 
-                onClick={() => setAlertIndex(prev => prev === 0 ? topDomains.length - 1 : prev - 1)}
+                onClick={() => setAlertIndex(prev => prev === 0 ? topThreats.length - 1 : prev - 1)}
                 style={{ position: 'absolute', left: '0.125rem', top: '45%', transform: 'translateY(-50%)', width: '1.25rem', height: '1.25rem', borderRadius: '50%', background: '#fff', border: '1px solid #E6EAF2', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}
               >
                 <svg width="0.75rem" height="0.75rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
               </button>
               <button 
-                onClick={() => setAlertIndex(prev => prev === topDomains.length - 1 ? 0 : prev + 1)}
+                onClick={() => setAlertIndex(prev => prev === topThreats.length - 1 ? 0 : prev + 1)}
                 style={{ position: 'absolute', right: '0.125rem', top: '45%', transform: 'translateY(-50%)', width: '1.25rem', height: '1.25rem', borderRadius: '50%', background: '#fff', border: '1px solid #E6EAF2', boxShadow: '0 2px 4px rgba(0,0,0,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', zIndex: 2 }}
               >
                 <svg width="0.75rem" height="0.75rem" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
@@ -200,17 +213,17 @@ export default function HomePage() {
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.125rem' }}>
-                      <span style={{ color: currentTheme.badgeColor, fontSize: '0.5rem', fontWeight: 800, background: currentTheme.badgeBg, padding: '0.125rem 0.25rem', borderRadius: '1rem', textTransform: 'uppercase' }}>{t('scam')}</span>
+                      <span style={{ color: currentTheme.badgeColor, fontSize: '0.5rem', fontWeight: 800, background: currentTheme.badgeBg, padding: '0.125rem 0.25rem', borderRadius: '1rem', textTransform: 'uppercase' }}>{topThreats[alertIndex].isWeb ? t('scam') : t('suspicious')}</span>
                       <span style={{ fontSize: '0.5625rem', color: '#DC2626', display: 'flex', alignItems: 'center', gap: '0.125rem', fontWeight: 600 }}>
                         <svg width="0.6875rem" height="0.6875rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                        {topDomains[alertIndex][1]} {topDomains[alertIndex][1] === 1 ? t('reportSingular') : t('reportsPlural')}
+                        {topThreats[alertIndex].count} {topThreats[alertIndex].count === 1 ? t('reportSingular') : t('reportsPlural')}
                       </span>
                     </div>
                     <div style={{ fontFamily: "var(--font-head)", fontWeight: '800', fontSize: '0.8125rem', color: '#0f172a', lineHeight: 1.1, marginBottom: '0.125rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {topDomains[alertIndex][0]}
+                      {topThreats[alertIndex].content}
                     </div>
                     <div style={{ fontSize: '0.625rem', color: '#475569', lineHeight: 1.2, marginBottom: '0.25rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {t('phishingLink')}
+                      {topThreats[alertIndex].isWeb ? t('phishingLink') : t('suspiciousSMS')}
                     </div>
                     
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -218,7 +231,7 @@ export default function HomePage() {
                         <svg width="0.5625rem" height="0.5625rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                         {t('activeThreats')}
                       </div>
-                      <div style={{ fontSize: '0.5625rem', color: '#64748b', fontWeight: 600 }}>{alertIndex + 1} / {topDomains.length}</div>
+                      <div style={{ fontSize: '0.5625rem', color: '#64748b', fontWeight: 600 }}>{alertIndex + 1} / {topThreats.length}</div>
                     </div>
                   </div>
                 </div>
@@ -226,7 +239,7 @@ export default function HomePage() {
               
               {/* Dots */}
               <div style={{ display: 'flex', justifyContent: 'center', gap: '0.1875rem', marginTop: '0.375rem' }}>
-                {Array.from({ length: topDomains.length }).map((_, i) => (
+                {Array.from({ length: topThreats.length }).map((_, i) => (
                   <div key={i} style={{ width: '0.25rem', height: '0.25rem', borderRadius: '50%', background: i === alertIndex ? '#3B82F6' : '#CBD5E1' }} />
                 ))}
               </div>
