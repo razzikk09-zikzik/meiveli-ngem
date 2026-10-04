@@ -72,12 +72,11 @@ export function useHotspots(isSampleMode = false, mode = 'citizen') {
   });
 
   reports.forEach(r => {
-    // Only approved/scam/suspicious count towards hotspots in citizen view
-    if (r.status !== 'Approved' && !isSampleMode && mode !== 'analyst') return; // in sample mode allow them? Wait, citizen side only approved.
-    if (mode === 'citizen' && r.status !== 'Approved') return;
-    if (r.status === 'Rejected') return; // Rejected is always excluded from map/KPIs
+    // Both views exclude Rejected reports entirely
+    if (r.status === 'Rejected') return;
     
-    if (r.classification !== 'Scam' && r.classification !== 'Suspicious') return;
+    // Both views exclude Safe reports from the hotspots map
+    if (r.classification === 'Safe') return;
     
     let loc = (r.area || '').trim();
     loc = loc ? loc.charAt(0).toUpperCase() + loc.slice(1).toLowerCase() : 'Unknown';
