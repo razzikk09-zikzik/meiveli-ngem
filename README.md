@@ -67,3 +67,40 @@ The `ThreatsPage.jsx` and `ThreatMap.jsx` rely entirely on `useHotspots.js` to f
 3. It only processes and maps reports that are `Scam` or `Suspicious`.
 
 Because of this, the moment an Analyst changes a false-positive domain to `Safe`, the realtime Supabase subscription fires, the hook recalculates, and the item vanishes from the mobile active threats list instantly.
+
+
+---
+
+## Project Structure & File Directory
+
+### 📂 `src/pages/` (Views & Routes)
+- **`AnalystDashboard.jsx`**: The desktop command center. Allows analysts to monitor real-time threat maps, view incoming reports, and manually override `status` (Approve/Reject) or `classification` (Safe/Suspicious).
+- **`DesktopGateway.jsx`**: A routing interceptor. If a user opens the app on a large screen, this prompts them to enter the Analyst Dashboard or view the mobile layout.
+- **`ReportPage.jsx`**: The 3-step citizen reporting flow. This captures text/links and runs it through `domainAnalyzer.js` for instant AI classification before saving to Supabase.
+- **`ThreatsPage.jsx`**: The mobile "Active Threats" view. Displays the map and the top 5 most reported threats to citizens.
+- **`HomePage.jsx`**: The mobile citizen homepage featuring a feed of recently verified scams and educational articles.
+- **`GuidePage.jsx`**: Educational module for citizens on how to identify various local scams (e.g., Electricity bill scams, KYC scams).
+
+### 📂 `src/hooks/` (Data & State Management)
+- **`useHotspots.js`**: The central data engine of the app. It connects to Supabase, fetches reports, sets up Realtime subscriptions, and aggregates raw reports into grouped `hotspots` for the map. Crucially, it acts as the security filter—ensuring `Safe` and `Rejected` reports never reach the citizen views.
+
+### 📂 `src/components/` (Reusable UI)
+- **`ThreatMap.jsx`**: A flexible Leaflet map component used by both citizens and analysts. It renders pulsating heatmap halos based on report density.
+
+### 📂 `src/utils/` (Core Intelligence & Utilities)
+- **`domainAnalyzer.js`**: The local threat intelligence engine. Parses URLs, handles complex Indian TLDs, and checks for brand impersonation against trusted lists.
+- **`trustedDomains.js`**: A strictly maintained whitelist database of official government portals, banks, and tech giants. Also contains lists of known URL shorteners.
+- **`indicatorUtils.js`**: Helper functions to normalize threats. For example, ensuring `https://sbi-update.xyz/login` and `sbi-update.xyz` are grouped as the exact same threat.
+- **`scamPatterns.js`**: Contains known local text-based scam footprints (e.g., "TNEB bill suspended").
+- **`supabase.js`**: Initializes the connection to the Supabase PostgreSQL database.
+- **`translations.js`**: Contains the localization dictionary for switching the app between English and Tamil.
+
+### 📂 `src/context/`
+- **`LanguageContext.jsx`**: React Context Provider that manages the active language state globally across all components.
+
+### 📂 `src/data/`
+- **`mock.js`**: Contains placeholder UI configuration elements (like tile definitions for the reporting page).
+
+### 📂 `Root Files`
+- **`App.jsx`**: The main entry point and React Router configuration. It handles the responsive split between the mobile PWA shell and the desktop dashboard.
+- **`index.css`**: Global CSS variables, fonts, and foundational styling.
