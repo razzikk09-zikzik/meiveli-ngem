@@ -1,5 +1,5 @@
 // src/pages/ReportPage.jsx — 3-step report flow: Type → Details → Done
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { reportTiles } from '../data/mock';
 import { supabase } from '../utils/supabase';
@@ -59,6 +59,14 @@ export default function ReportPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
+  const [pointsEarned, setPointsEarned] = useState(false);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user || null);
+    });
+  }, []);
 
   const submit = async () => {
     if (!message || message.trim() === '') {
@@ -83,15 +91,33 @@ export default function ReportPage() {
     
     // 2. Insert into Supabase
     try {
-      const { error } = await supabase.from('reports').insert([{
+      const reportPayload = {
         type: type || 'other',
         content: message,
         area: area,
         classification: classification,
         status: status,
-      }]);
+      };
+      if (user) {
+        reportPayload.user_id = user.id;
+      }
+
+      const { error } = await supabase.from('reports').insert([reportPayload]);
 
       if (error) throw error;
+
+      // 3. Award Points if Logged in
+      if (user) {
+        try {
+          const { data: profile } = await supabase.from('profiles').select('points').eq('id', user.id).single();
+          if (profile) {
+            await supabase.from('profiles').update({ points: profile.points + 10 }).eq('id', user.id);
+            setPointsEarned(true);
+          }
+        } catch (pointError) {
+          console.error("Failed to update points:", pointError);
+        }
+      }
 
       setReportId(randomId);
       setStep(3);
@@ -247,6 +273,12 @@ export default function ReportPage() {
           <p style={{ color: '#475569', fontSize: '0.875rem', lineHeight: 1.5 }}>
             {t('reportReceivedPart1')}<strong style={{ color: '#2563EB' }}>{reportId}</strong>{t('reportReceivedPart2')}
           </p>
+          {pointsEarned && (
+            <div style={{ background: '#FEF3C7', color: '#D97706', padding: '0.5rem 1rem', borderRadius: '2rem', fontWeight: 'bold', fontSize: '0.875rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <svg width="1.25rem" height="1.25rem" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg>
+              {t('pointsEarned')}
+            </div>
+          )}
           <div style={{ background: '#EFF6FF', border: '1px solid #BFDBFE', borderRadius: '0.625rem', padding: '0.75rem 1rem', fontSize: '0.8125rem', color: '#1e40af', marginTop: '0.25rem' }} dangerouslySetInnerHTML={{ __html: t('call1930') }} />
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem', width: '100%', marginTop: '0.75rem' }}>
             <button
@@ -256,7 +288,7 @@ export default function ReportPage() {
               {t('backHome')}
             </button>
             <button
-              onClick={() => { setType(null); setMessage(''); setLostMoney(null); setReportId(null); setStep(1); }}
+              onClick={() => { setType(null); setMessage(''); setLostMoney(null); setReportId(null); setStep(1); setPointsEarned(false); }}
               style={{ width: '100%', padding: '0.875rem', borderRadius: '2rem', border: '1px solid #E6EAF2', background: '#fff', color: '#334155', fontFamily: 'var(--font-head)', fontWeight: '700', fontSize: '0.9375rem', cursor: 'pointer' }}
             >
               {t('reportAnother')}

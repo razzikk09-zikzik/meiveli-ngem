@@ -1,6 +1,6 @@
 import { navItems } from '../data/mock';
 import { useLocation, Link } from 'react-router-dom';
-import { Home, ShieldAlert, TriangleAlert, BookOpen, FileText } from 'lucide-react';
+import { Home, ShieldAlert, TriangleAlert, BookOpen, Trophy } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 const iconMap = {
@@ -8,7 +8,7 @@ const iconMap = {
   ShieldAlert,
   TriangleAlert,
   BookOpen,
-  FileText
+  Trophy
 };
 
 const routeToKey = {
@@ -16,7 +16,7 @@ const routeToKey = {
   'report': 'report',
   'threats': 'threats',
   'guide': 'guide',
-  'help': 'help'
+  'leaderboard': 'leaderboard'
 };
 
 export default function BottomTabBar() {

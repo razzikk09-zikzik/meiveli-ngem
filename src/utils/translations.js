@@ -6,6 +6,14 @@ export const translations = {
     threats: "Threats",
     guide: "Guide",
     help: "Help",
+    leaderboard: "Leaderboard",
+    points: "Points",
+    loginToEarn: "Login to earn points",
+    login: "Login",
+    logout: "Logout",
+    rank: "Rank",
+    noProfiles: "No profiles yet. Be the first to report!",
+    pointsEarned: "+10 Points earned!",
     
     // Home Page
     checkStaySafe: "Is this suspicious?",
@@ -175,6 +183,14 @@ export const translations = {
     threats: "அச்சுறுத்தல்கள்",
     guide: "வழிகாட்டி",
     help: "உதவி",
+    leaderboard: "லீடர்போர்டு",
+    points: "புள்ளிகள்",
+    loginToEarn: "புள்ளிகள் பெற உள்நுழைக",
+    login: "உள்நுழை",
+    logout: "வெளியேறு",
+    rank: "தரம்",
+    noProfiles: "யாரும் இல்லை. முதலில் ரிப்போர்ட் செய்யுங்கள்!",
+    pointsEarned: "+10 புள்ளிகள் பெறப்பட்டது!",
     
     // Home Page
     checkStaySafe: "இது சந்தேகத்திற்குரியதா?",

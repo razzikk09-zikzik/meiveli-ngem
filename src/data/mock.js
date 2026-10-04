@@ -73,7 +73,7 @@ export const navItems = [
   { id: 'report', label: 'Report a Scam', icon: 'ShieldAlert', active: false },
   { id: 'threats', label: 'Active Threats', icon: 'TriangleAlert', active: false },
   { id: 'guide', label: 'Safety Guide', icon: 'BookOpen', active: false },
-  { id: 'help', label: 'Help & Resources', icon: 'FileText', active: false },
+  { id: 'leaderboard', label: 'Leaderboard', icon: 'Trophy', active: false },
 ];
 
 export const reportTiles = [
