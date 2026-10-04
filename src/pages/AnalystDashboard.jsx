@@ -206,7 +206,7 @@ export default function AnalystDashboard() {
         reviewed_by: 'analyst_1'
       }).eq('id', reportId);
       if (error) throw error;
-      showToast(`Report ${newStatus.toLowerCase()}`);
+      showToast(newStatus === 'Rejected' ? 'Report rejected and removed from map' : newStatus === 'Approved' ? 'Report approved and published to map' : `Report moved to ${newStatus}`);
     } catch (e) {
       setOptimisticReports(prev => prev.map(r => r.id === reportId ? original : r));
       showToast('Error updating status');
@@ -729,7 +729,33 @@ export default function AnalystDashboard() {
                           <tr key={r.id} style={{ background: '#F8FAFC', borderBottom: '1px solid #EEF2F7' }}>
                             <td style={{ padding: '0.5rem 1rem 0.5rem 2.5rem', color: '#64748B', fontSize: '0.8rem' }}>#{String(r.id).slice(0,6)}</td>
                             <td colSpan="2" style={{ padding: '0.5rem 1rem', color: '#475569', fontSize: '0.8rem' }}><div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{r.content}</div></td>
-                            <td colSpan="1" style={{ padding: '0.5rem 1rem' }}><span style={{ padding: '2px 6px', borderRadius: '1rem', fontSize: '0.65rem', fontWeight: '600', color: cColor, background: cBg }}>{r.classification}</span></td>
+                            <td colSpan="1" style={{ padding: '0.5rem 1rem' }}>
+                              <select 
+                                value={r.classification}
+                                onChange={async (e) => {
+                                  const newClass = e.target.value;
+                                  const original = r.classification;
+                                  setOptimisticReports(prev => prev.map(rep => rep.id === r.id ? { ...rep, classification: newClass } : rep));
+                                  if (!isSampleMode) {
+                                    try {
+                                      const { error } = await supabase.from('reports').update({ classification: newClass }).eq('id', r.id);
+                                      if (error) throw error;
+                                      showToast(`Classification updated to ${newClass}`);
+                                    } catch(err) {
+                                      setOptimisticReports(prev => prev.map(rep => rep.id === r.id ? { ...rep, classification: original } : rep));
+                                      showToast('Failed to update classification');
+                                    }
+                                  } else {
+                                    showToast(`Classification updated to ${newClass}`);
+                                  }
+                                }}
+                                style={{ padding: '2px 6px', borderRadius: '1rem', fontSize: '0.65rem', fontWeight: '600', color: cColor, background: cBg, border: `1px solid ${cColor}`, cursor: 'pointer', outline: 'none' }}
+                              >
+                                <option value="Scam">Scam</option>
+                                <option value="Suspicious">Suspicious</option>
+                                <option value="Safe">Safe</option>
+                              </select>
+                            </td>
                             <td colSpan="3" style={{ padding: '0.5rem 1rem', color: '#94A3B8', fontSize: '0.75rem', textAlign: 'right' }}>{new Date(r.created_at).toLocaleString()}</td>
                           </tr>
                         );
