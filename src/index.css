@@ -22,8 +22,6 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   background: linear-gradient(160deg, #EEF3FF 0%, #F5F0FF 100%);
   color: #1e293b;
-  overflow: hidden;
-  height: 100dvh;
   -webkit-font-smoothing: antialiased;
 }
 
